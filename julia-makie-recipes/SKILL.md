@@ -1,3 +1,8 @@
+---
+name: julia-makie-recipes
+description: Create custom Makie plot types using recipes for reusable, themeable visualizations. Use this skill when implementing plot recipes in Makie extensions.
+---
+
 # Julia Makie Recipes
 
 Create custom Makie plot types using recipes. Recipes enable reusable, themeable visualizations

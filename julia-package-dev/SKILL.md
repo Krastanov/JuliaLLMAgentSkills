@@ -1,3 +1,8 @@
+---
+name: julia-package-dev
+description: Work with Julia packages in development mode including environment setup, dependency management, and testing. Use this skill when developing Julia packages.
+---
+
 # Julia Package Development
 
 Work with Julia packages in development mode: environment setup, dependency management,

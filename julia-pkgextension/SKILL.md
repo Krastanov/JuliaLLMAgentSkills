@@ -1,3 +1,8 @@
+---
+name: julia-pkgextension
+description: Build Julia package extensions (weak dependencies) for optional functionality. Use this skill when creating extensions that load conditionally based on trigger packages.
+---
+
 # Julia Package Extensions
 
 Build package extensions (weak dependencies) to provide optional functionality that loads

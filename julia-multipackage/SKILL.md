@@ -1,3 +1,8 @@
+---
+name: julia-multipackage
+description: Work with multiple inter-related Julia packages simultaneously, managing dependencies across packages and testing changes together. Use this skill when developing packages that depend on each other.
+---
+
 # Julia Multi-Package Development
 
 Work with multiple inter-related Julia packages simultaneously, managing dependencies

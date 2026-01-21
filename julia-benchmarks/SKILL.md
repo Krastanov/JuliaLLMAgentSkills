@@ -1,3 +1,8 @@
+---
+name: julia-benchmarks
+description: Set up performance benchmarking for Julia packages using BenchmarkTools.jl and AirspeedVelocity.jl. Use this skill when adding benchmarks or CI performance tracking.
+---
+
 # Julia Benchmarks
 
 Set up performance benchmarking for Julia packages using BenchmarkTools.jl and

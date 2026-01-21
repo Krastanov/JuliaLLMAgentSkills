@@ -1,3 +1,8 @@
+---
+name: julia-tests
+description: Set up and organize tests for Julia packages using TestItemRunner.jl with conditional loading and tagging. Use this skill when configuring test infrastructure.
+---
+
 # Julia Tests
 
 Set up and organize tests for Julia packages using TestItemRunner.jl with support for

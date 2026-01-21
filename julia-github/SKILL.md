@@ -1,3 +1,8 @@
+---
+name: julia-github
+description: Use Git and the GitHub CLI for version control and pull request workflows in Julia package development. Use this skill when working with Git remotes, branches, and PRs.
+---
+
 # Julia GitHub Workflow
 
 Use Git and the GitHub CLI (`gh`) for version control and pull request workflows
