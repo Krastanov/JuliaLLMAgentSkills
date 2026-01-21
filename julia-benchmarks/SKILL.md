@@ -3,6 +3,33 @@
 Set up performance benchmarking for Julia packages using BenchmarkTools.jl and
 AirspeedVelocity.jl for CI integration.
 
+## Quick Measurements
+
+### BenchmarkTools.jl @btime
+
+For quick one-off measurements during development:
+
+```julia
+using BenchmarkTools
+
+v = rand(1000)
+@btime sum($v)          # Interpolate with $ to avoid global overhead
+@btime sort!(x) setup=(x=copy($v))  # Fresh data each run
+```
+
+### Chairmarks.jl (Lightweight Alternative)
+
+Faster startup, simpler syntax:
+
+```julia
+using Chairmarks
+
+v = rand(1000)
+@b sum(v)               # Automatic interpolation
+@b sort!(x) setup=(x=copy($v))
+@b (A=rand(100,100), b=rand(100)) A \ _.b  # Use _ for setup result
+```
+
 ## Project Structure
 
 ```

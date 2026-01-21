@@ -96,6 +96,24 @@ xdg-open docs/build/index.html  # Linux
 open docs/build/index.html      # macOS
 ```
 
+### Live Preview with LiveServer.jl
+
+For iterative documentation development, use LiveServer.jl to auto-refresh on changes:
+
+```bash
+# Add LiveServer to docs environment
+julia --project=docs -e 'using Pkg; Pkg.add("LiveServer")'
+
+# Build and serve with live reload
+julia --project=docs -e '
+    include("docs/make.jl")
+    using LiveServer
+    serve(dir="docs/build")'
+```
+
+This opens a browser that auto-refreshes when you rebuild. Run `make.jl` again after
+editing markdown files to see changes.
+
 ## docs/make.jl Template
 
 ### Simple Package

@@ -361,6 +361,56 @@ VERSION >= v"1.10"
 condition && Pkg.add("Package")
 ```
 
+## Additional Testing Tools
+
+### ReferenceTests.jl
+
+Compare outputs against stored reference files:
+
+```julia
+@testitem "Reference tests" begin
+    using ReferenceTests
+
+    result = generate_output()
+    @test_reference "references/expected.txt" result
+end
+```
+
+### LocalCoverage.jl
+
+Analyze code coverage locally without CI:
+
+```julia
+using LocalCoverage
+
+# Generate coverage report
+generate_coverage("MyPackage")
+
+# Open HTML report
+open_coverage()
+```
+
+### Standard Library Test Module
+
+For simple cases without TestItemRunner:
+
+```julia
+# test/runtests.jl
+using Test
+using MyPackage
+
+@testset "MyPackage Tests" begin
+    @testset "Basic functionality" begin
+        @test myfunction(1) == expected
+        @test_throws ErrorType badfunction()
+    end
+
+    @testset "Edge cases" begin
+        @test isempty(myfunction([]))
+    end
+end
+```
+
 ## Related Skills
 
 - `julia-doctests` - Doctest configuration
