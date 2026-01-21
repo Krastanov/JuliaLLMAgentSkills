@@ -100,14 +100,6 @@ for n in [10, 100, 1000, 10000]
 end
 ```
 
-### Direction/Mode Comparison
-
-```julia
-SUITE["traversal"]["direction"] = BenchmarkGroup(["direction"])
-SUITE["traversal"]["direction"]["right"] = @benchmarkable process(c, :right) setup=(c=make_data(100)) evals=1
-SUITE["traversal"]["direction"]["left"] = @benchmarkable process(c, :left) setup=(c=make_data(100)) evals=1
-```
-
 ## Running Benchmarks Locally
 
 ```bash
