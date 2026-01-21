@@ -198,49 +198,6 @@ Pages = ["chapter2.md"]
 ```
 ```
 
-## Styling the Bibliography
-
-### Recommended CSS
-
-Add to `docs/src/assets/citations.css`:
-
-```css
-/* Bibliography styling */
-.citation {
-    font-size: 0.9em;
-}
-
-.bibliography ul {
-    list-style-type: none;
-    padding-left: 0;
-}
-
-.bibliography li {
-    margin-bottom: 0.5em;
-    padding-left: 2em;
-    text-indent: -2em;
-}
-
-/* Citation links */
-a.citation {
-    color: inherit;
-    text-decoration: none;
-    border-bottom: 1px dotted;
-}
-
-a.citation:hover {
-    border-bottom-style: solid;
-}
-```
-
-Include in make.jl:
-
-```julia
-format = Documenter.HTML(
-    assets = ["assets/citations.css"]
-)
-```
-
 ## Complete Example
 
 ### docs/make.jl
@@ -361,4 +318,3 @@ author = {M{\"u}ller, Hans}
 - [ ] Plugin passed to `makedocs(plugins = [bib], ...)`
 - [ ] Bibliography page created with `@bibliography` block
 - [ ] Bibliography page included in `pages`
-- [ ] Optional: Custom CSS for bibliography styling
