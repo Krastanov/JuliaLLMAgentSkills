@@ -1,3 +1,8 @@
+---
+name: julia-docs
+description: Build documentation websites for Julia packages using Documenter.jl. Use this skill when setting up docs/, configuring make.jl, or writing documentation pages.
+---
+
 # Julia Documentation
 
 Build documentation for Julia packages using Documenter.jl.

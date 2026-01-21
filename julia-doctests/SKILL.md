@@ -1,3 +1,8 @@
+---
+name: julia-doctests
+description: Configure and write doctests for Julia packages using Documenter.jl. Use this skill when adding testable code examples to docstrings or setting up doctest infrastructure.
+---
+
 # Julia Doctests
 
 Write and test doctests - executable code examples embedded in docstrings that are

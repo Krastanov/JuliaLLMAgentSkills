@@ -1,3 +1,8 @@
+---
+name: julia-ci-github
+description: Configure GitHub Actions CI for Julia packages including testing, documentation, and benchmarks. Use this skill when setting up or modifying CI workflows.
+---
+
 # Julia CI with GitHub Actions
 
 Configure continuous integration for Julia packages using GitHub Actions.

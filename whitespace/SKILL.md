@@ -1,3 +1,8 @@
+---
+name: whitespace
+description: Fix trailing whitespace and ensure files end with newlines. Use this skill when preparing code for commit or when whitespace issues are detected.
+---
+
 # Whitespace
 
 Fix whitespace issues in source code: trailing whitespace and missing final newlines.

@@ -1,3 +1,8 @@
+---
+name: julia-ci-buildkite
+description: Configure Buildkite CI for Julia packages, especially for GPU testing and specialized hardware. Use this skill when setting up Buildkite pipelines.
+---
+
 # Julia CI with Buildkite
 
 Configure continuous integration for Julia packages using Buildkite.

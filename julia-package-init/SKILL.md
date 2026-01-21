@@ -1,3 +1,8 @@
+---
+name: julia-package-init
+description: Create new Julia packages with modern infrastructure including tests, documentation, and CI. Use this skill when starting a new Julia package from scratch.
+---
+
 # Julia Package Initialization
 
 Create a new Julia package with modern infrastructure: tests, documentation, CI, and more.

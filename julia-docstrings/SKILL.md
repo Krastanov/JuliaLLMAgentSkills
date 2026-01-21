@@ -1,3 +1,8 @@
+---
+name: julia-docstrings
+description: Write Julia docstrings using DocStringExtensions.jl and SciML conventions. Use this skill when documenting functions, types, and modules in Julia packages.
+---
+
 # Julia Docstrings
 
 Write high-quality Julia docstrings following SciML conventions and using DocStringExtensions.jl.

@@ -1,3 +1,8 @@
+---
+name: julia-doccitations
+description: Add citations and bibliographies to Julia documentation using DocumenterCitations.jl. Use this skill when adding academic references to package documentation.
+---
+
 # Julia Documentation Citations
 
 Add citations and bibliographies to Julia documentation using DocumenterCitations.jl.
