@@ -70,8 +70,6 @@ Pkg.update("SpecificPackage")        # Single package
 
 # Check status
 Pkg.status()                         # Show installed packages
-Pkg.status(mode=PKGMODE_PROJECT)     # Only direct dependencies
-Pkg.status(mode=PKGMODE_MANIFEST)    # Include transitive deps
 ```
 
 ### Adding Dependencies
@@ -90,7 +88,7 @@ Pkg.add(url="https://github.com/Org/Package.jl")
 Pkg.develop(path="../OtherPackage.jl")
 
 # Add as weak dependency (for extensions)
-# Edit Project.toml manually - no Pkg command for this
+# Edit Project.toml manually to move a dependency to a weak dependency - no Pkg command for this
 ```
 
 ### Removing Dependencies
@@ -120,12 +118,6 @@ Always use `--project` to specify the environment:
 ```bash
 # Activate and run
 julia --project=. -e 'using MyPackage'
-
-# Use multiple threads (speeds up compilation)
-julia -tauto --project=.
-
-# Interactive with project
-julia -tauto --project=. -i
 ```
 
 ## Running Tests
@@ -134,35 +126,14 @@ julia -tauto --project=. -i
 
 ```bash
 # Run all tests
-julia --project=. -e 'using Pkg; Pkg.test()'
-
-# With threads (faster compilation)
-julia -tauto --project=. -e 'using Pkg; Pkg.test()'
-```
-
-### Test Subproject
-
-If tests have their own `test/Project.toml`:
-
-```bash
-# Instantiate test environment
-julia --project=test -e 'using Pkg; Pkg.develop(PackageSpec(path=pwd())); Pkg.instantiate()'
-
-# Run tests directly
-julia --project=test test/runtests.jl
-
-# With threads
-julia -tauto --project=test test/runtests.jl
+julia --project=. -e 'using Pkg; Pkg.test("PackageName")'
 ```
 
 ### Environment Variables for Tests
 
 ```bash
-# Run JET static analysis tests
-JET_TEST=true julia --project=. -e 'using Pkg; Pkg.test()'
-
 # Run specific test categories (package-specific)
-MYPACKAGE_PLOT_TEST=true julia --project=. -e 'using Pkg; Pkg.test()'
+MYPACKAGE_PLOT_TEST=true julia --project=. -e 'using Pkg; Pkg.test("PackageName")'
 ```
 
 ### TestItemRunner Pattern
@@ -208,19 +179,8 @@ end
 ### Force Recompilation
 
 ```julia
-# Clear compiled cache for a package
 using Pkg
 Pkg.precompile()  # Precompile all packages
-
-# Or delete the compiled cache manually
-rm -rf ~/.julia/compiled/v1.XX/MyPackage
-```
-
-### Check Precompilation Status
-
-```julia
-using Pkg
-Pkg.precompile()  # Will show what needs compilation
 ```
 
 ## Working with Extensions
@@ -241,7 +201,7 @@ import Makie          # Triggers MyPackageMakieExt
 import SomeDep
 const MyPackageExt = Base.get_extension(MyPackage, :MyPackageSomeDepExt)
 
-# Now you can test extension functionality
+# Now you can test extension functionality that is not exposed in the main package namespace
 @test MyPackageExt.extension_function() == expected
 ```
 
