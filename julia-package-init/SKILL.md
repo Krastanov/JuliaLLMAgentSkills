@@ -102,10 +102,6 @@ LocalPreferences.toml
 scratch/
 ```
 
-## Test Setup
-
-See the `julia-tests` skill for test configuration.
-
 ## Secrets Setup
 
 | Secret | Purpose | How to Generate |
@@ -118,7 +114,7 @@ See the `julia-tests` skill for test configuration.
 - [ ] `Project.toml` with UUID, version, compat
 - [ ] `[workspace]` entry for subprojects
 - [ ] `src/MyPackage.jl` with module structure
-- [ ] `test/Project.toml` and `test/runtests.jl`
+- [ ] `test/` setup (see `julia-tests-run` skill)
 - [ ] `docs/` setup (see `julia-docs` skill)
 - [ ] `.gitignore` and `LICENSE`
 - [ ] `.github/workflows/ci.yml`
@@ -127,10 +123,10 @@ See the `julia-tests` skill for test configuration.
 ## Reference
 
 - **[CI Workflows](references/workflows.md)** - Complete GitHub Actions workflow templates
-- **[Test Setup](references/test-setup.md)** - Test dependencies and runner configuration
 
 ## Related Skills
 
+- `julia-tests-run` - Test runner setup
+- `julia-tests-write` - Writing tests
 - `julia-docs` - Documentation setup
-- `julia-tests` - Test patterns
 - `julia-ci-github` - CI configuration details

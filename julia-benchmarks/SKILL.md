@@ -117,4 +117,4 @@ julia -tauto --project=benchmark -e '
 ## Related Skills
 
 - `julia-ci-github` - GitHub Actions configuration
-- `julia-tests` - Test setup and patterns
+- `julia-tests-run` - Running tests

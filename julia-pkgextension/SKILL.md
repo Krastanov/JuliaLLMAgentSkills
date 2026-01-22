@@ -98,5 +98,6 @@ end
 ## Related Skills
 
 - `julia-docs` - Documentation setup including extensions
-- `julia-tests` - Testing with TestItemRunner and tags
+- `julia-tests-run` - Running tests with TestItemRunner
+- `julia-tests-write` - Writing tests with tags
 - `julia-makie-recipes` - Makie plot recipes

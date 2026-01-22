@@ -26,7 +26,8 @@ A collection of Claude Code skills for Julia package development, following mode
 
 | Skill | Description |
 |-------|-------------|
-| [julia-tests](julia-tests/) | Set up tests with TestItemRunner.jl |
+| [julia-tests-run](julia-tests-run/) | Run tests with filtering and conditional loading |
+| [julia-tests-write](julia-tests-write/) | Write tests with TestItemRunner.jl patterns |
 | [julia-benchmarks](julia-benchmarks/) | Performance benchmarking with BenchmarkTools.jl |
 
 ### Continuous Integration
@@ -76,13 +77,15 @@ Many skills reference each other. Key relationships:
 ```
 julia-package-init
 ├── julia-docs
-├── julia-tests
+├── julia-tests-run
+├── julia-tests-write
 ├── julia-ci-github
 └── julia-ci-buildkite
 
 julia-pkgextension
 ├── julia-docs (for documenting extensions)
-├── julia-tests (for testing extensions)
+├── julia-tests-run (for running extension tests)
+├── julia-tests-write (for writing extension tests)
 └── julia-makie-recipes (example use case)
 
 julia-docs

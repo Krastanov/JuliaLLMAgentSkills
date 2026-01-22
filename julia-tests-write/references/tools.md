@@ -48,6 +48,22 @@ using MyPackage
 end
 ```
 
+## Common Test Macros
+
+```julia
+@test expr                  # Test expression is true
+@test_throws E expr         # Test that E is thrown
+@test_logs (:warn,) expr    # Test log output
+@test_broken expr           # Known broken test
+@test_skip expr             # Skip this test
+
+@testset "name" begin       # Group tests
+    # tests...
+end
+
+@inferred f(x)              # Test type stability
+```
+
 ## Best Practices
 
 1. **Use TestItemRunner** for modern, organized tests

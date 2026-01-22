@@ -68,3 +68,43 @@ end
     @test oscar_function() works
 end
 ```
+
+## Setup and Teardown
+
+```julia
+@testitem "With setup" begin
+    using MyPackage
+
+    # Setup runs once per test item
+    data = load_test_data()
+
+    @test process(data) == expected
+    @test validate(data)
+end
+```
+
+## Shared Test Utilities
+
+```julia
+# test/TestUtils.jl
+module TestUtils
+    export make_test_data, verify_result
+
+    function make_test_data(n::Int)
+        # Create reproducible test data
+    end
+
+    function verify_result(result)
+        # Common verification logic
+    end
+end
+
+# test/test_core.jl
+@testitem "Core" begin
+    include("TestUtils.jl")
+    using .TestUtils
+
+    data = make_test_data(100)
+    @test verify_result(process(data))
+end
+```

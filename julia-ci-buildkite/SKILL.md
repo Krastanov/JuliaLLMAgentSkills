@@ -91,4 +91,4 @@ agents:
 ## Related Skills
 
 - `julia-ci-github` - GitHub Actions CI configuration
-- `julia-tests` - Test setup and patterns
+- `julia-tests-run` - Running tests

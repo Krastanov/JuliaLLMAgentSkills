@@ -97,4 +97,5 @@ jobs:
 ## Related Skills
 
 - `julia-ci-buildkite` - Buildkite CI configuration
-- `julia-tests` - Test setup and patterns
+- `julia-tests-run` - Running tests
+- `julia-tests-write` - Writing tests

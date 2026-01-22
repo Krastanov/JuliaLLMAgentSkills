@@ -6,7 +6,7 @@ description: Work with Julia packages in development mode including environment 
 # Julia Package Development
 
 Work with Julia packages in development mode: environment setup, dependency management,
-compilation, and testing.
+compilation, and debugging.
 
 ## Environments vs Packages
 
@@ -98,7 +98,6 @@ JULIA_DEBUG=MyPackage julia --project=.
 | Install deps | `Pkg.instantiate()` |
 | Dev mode | `Pkg.develop(path="...")` |
 | Exit dev mode | `Pkg.free("Name")` |
-| Run tests | `Pkg.test()` |
 
 ## Reference
 
@@ -107,5 +106,6 @@ JULIA_DEBUG=MyPackage julia --project=.
 
 ## Related Skills
 
-- `julia-tests` - Test setup and patterns
+- `julia-tests-run` - Running tests
+- `julia-tests-write` - Writing tests
 - `julia-multipackage` - Multi-package workflows
