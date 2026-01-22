@@ -28,7 +28,14 @@ A collection of Claude Code skills for Julia package development, following mode
 |-------|-------------|
 | [julia-tests-run](julia-tests-run/) | Run tests with filtering and conditional loading |
 | [julia-tests-write](julia-tests-write/) | Write tests with TestItemRunner.jl patterns |
-| [julia-benchmarks](julia-benchmarks/) | Performance benchmarking with BenchmarkTools.jl |
+
+### Benchmarking
+
+| Skill | Description |
+|-------|-------------|
+| [julia-bench-quick](julia-bench-quick/) | Quick impromptu benchmarks with @btime/@b |
+| [julia-bench-write](julia-bench-write/) | Write benchmark suites with BenchmarkTools.jl |
+| [julia-bench-run](julia-bench-run/) | Run benchmark suites and CI performance tracking |
 
 ### Continuous Integration
 
@@ -92,6 +99,10 @@ julia-docs
 ├── julia-docstrings
 ├── julia-doctests
 └── julia-doccitations
+
+julia-bench-write
+├── julia-bench-quick (for patterns)
+└── julia-bench-run (for execution)
 ```
 
 ## Contributing

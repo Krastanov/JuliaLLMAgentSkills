@@ -1,4 +1,4 @@
-# Complete Benchmark Example
+# Complete Benchmark Suite Example
 
 ## benchmark/Project.toml
 
@@ -57,22 +57,11 @@ SUITE["algorithms"]["v1_100"] = @benchmarkable algorithm_v1(d) setup=(d=make_sma
 SUITE["algorithms"]["v2_100"] = @benchmarkable algorithm_v2(d) setup=(d=make_small_data(100)) evals=1
 ```
 
-## Running Benchmarks
+## Key Points
 
-```bash
-# Run all benchmarks
-julia -tauto --project=benchmark -e '
-    include("benchmark/benchmarks.jl")
-    run(SUITE)'
-
-# Run specific group
-julia -tauto --project=benchmark -e '
-    include("benchmark/benchmarks.jl")
-    run(SUITE["core"])'
-
-# Tune and run (more accurate but slower)
-julia -tauto --project=benchmark -e '
-    include("benchmark/benchmarks.jl")
-    tune!(SUITE)
-    run(SUITE)'
-```
+1. **StableRNG** ensures reproducible random data
+2. **Helper functions** create consistent test data
+3. **const globals** for data used across benchmarks
+4. **setup** for fresh data in mutating benchmarks
+5. **evals=1** prevents invalid repeated mutations
+6. **Tags** on groups enable filtered runs

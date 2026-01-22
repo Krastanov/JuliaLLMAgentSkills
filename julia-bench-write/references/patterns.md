@@ -1,4 +1,4 @@
-# Benchmark Patterns
+# Benchmark Suite Patterns
 
 ## In-Place Operations
 
@@ -34,6 +34,15 @@ SUITE["algorithms"] = BenchmarkGroup()
 SUITE["algorithms"]["v1"] = BenchmarkGroup()
 SUITE["algorithms"]["v1"]["100"] = @benchmarkable algorithm_v1(n) setup=(n=100)
 SUITE["algorithms"]["v1"]["1000"] = @benchmarkable algorithm_v1(n) setup=(n=1000)
+```
+
+## Tagged Groups
+
+Add tags for filtering:
+
+```julia
+SUITE["core"] = BenchmarkGroup(["core", "critical"])
+SUITE["optional"] = BenchmarkGroup(["optional"])
 ```
 
 ## Best Practices
