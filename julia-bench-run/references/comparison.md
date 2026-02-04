@@ -19,8 +19,8 @@ baseline = BenchmarkTools.load("baseline.json")[1]
 # Run new benchmarks
 results_new = run(SUITE)
 
-# Compare using median (most stable)
-judgment = judge(median(results_new), median(baseline))
+# Compare using minimum (most stable)
+judgment = judge(minimum(results_new), minimum(baseline))
 
 # View results
 println(judgment)
@@ -72,7 +72,7 @@ baseline = BenchmarkTools.load("baseline.json")[1]
 current = run(SUITE)
 
 # Compare
-judgment = judge(median(current), median(baseline))
+judgment = judge(minimum(current), minimum(baseline))
 
 # Report
 println("=== Regressions ===")
@@ -88,7 +88,7 @@ end
 
 ## Best Practices
 
-1. **Use median** for comparison (more stable than mean)
+1. **Use minimum** for comparison (more reliable than mean)
 2. **Run on consistent hardware** for valid comparisons
 3. **Close other applications** during benchmarking
 4. **Use multiple samples** (default behavior)
