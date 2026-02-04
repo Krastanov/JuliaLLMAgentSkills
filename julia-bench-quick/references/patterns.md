@@ -27,31 +27,6 @@ v = rand(1000)
 @btime sort!($v)
 ```
 
-## Avoiding Compilation in Results
-
-Run benchmarks twice - first run includes compilation:
-
-```julia
-v = rand(1000)
-@btime sum($v)  # Includes compilation
-@btime sum($v)  # Pure runtime measurement
-```
-
-Or use `@benchmark` for more samples:
-
-```julia
-@benchmark sum($v)  # Multiple samples, compilation amortized
-```
-
-## Type Stability Checks
-
-Combine with `@code_warntype` for performance analysis:
-
-```julia
-@code_warntype f(x)  # Check type stability first
-@btime f($x)         # Then measure performance
-```
-
 ## Memory Allocation
 
 `@btime` shows allocations - zero is ideal for hot paths:
@@ -81,13 +56,3 @@ println("manual loop:")
     s
 end
 ```
-
-## BenchmarkTools vs Chairmarks
-
-| Feature | BenchmarkTools | Chairmarks |
-|---------|---------------|------------|
-| Interpolation | Manual (`$`) | Automatic |
-| Load time | ~2s | ~0.1s |
-| Statistics | Detailed | Minimal |
-| Comparison | Separate calls | Built-in |
-| Best for | Thorough analysis | Quick checks |
