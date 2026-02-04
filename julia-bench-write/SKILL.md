@@ -5,41 +5,18 @@ description: Write benchmark suites for Julia packages using BenchmarkTools.jl. 
 
 # Writing Julia Benchmark Suites
 
-Write organized benchmark suites for Julia packages using BenchmarkTools.jl
-with reproducible data and grouped benchmarks.
+Write organized benchmark suites for Julia packages using BenchmarkTools.jl.
 
-## Project Structure
+## Create the Benchmark Environment (the "benchmark" folder inside of the package folder)
 
-```
-MyPackage.jl/
-├── Project.toml           # Must include benchmark in workspace
-├── benchmark/
-│   ├── Project.toml       # Benchmark dependencies
-│   └── benchmarks.jl      # Benchmark suite definition
+```julia
+using Pkg
+Pkg.activate("benchmark")
+Pkg.add(["BenchmarkTools", "StableRNGs"])
+Pkg.develop(path=pwd())
 ```
 
-## Workspace Configuration
-
-```toml
-# Project.toml
-[workspace]
-projects = ["docs", "benchmark"]
-```
-
-## Benchmark Dependencies
-
-### benchmark/Project.toml
-
-```toml
-[deps]
-BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
-MyPackage = "your-package-uuid"
-StableRNGs = "860ef19b-820b-49d6-a774-d7a799459cd3"
-```
-
-## Basic Suite Structure
-
-### benchmark/benchmarks.jl
+## Define the Suite (benchmark/benchmarks.jl)
 
 ```julia
 using BenchmarkTools
@@ -48,24 +25,17 @@ using StableRNGs
 
 const SUITE = BenchmarkGroup()
 rng = StableRNG(42)
-
-# Pre-create constant test data
 const test_data = generate_data(rng, 1000)
 
-# Define benchmarks
 SUITE["operations"] = BenchmarkGroup()
 SUITE["operations"]["process"] = @benchmarkable process($test_data)
 SUITE["inplace"]["modify"] = @benchmarkable modify!(d) setup=(d=copy($test_data)) evals=1
 ```
 
-## Quick Reference
+## Notes
 
-| Pattern | Use Case |
-|---------|----------|
-| `@benchmarkable f($x)` | Pure function |
-| `@benchmarkable f!(y) setup=(y=copy(x)) evals=1` | Mutating function |
-| `SUITE["group"]["name"]` | Organization |
-| `StableRNG(seed)` | Reproducible random |
+- Use `@benchmarkable` with `setup` for mutating functions.
+- Keep data in `const` globals for reproducibility and type stability.
 
 ## Reference
 

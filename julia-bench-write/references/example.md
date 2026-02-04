@@ -1,6 +1,15 @@
 # Complete Benchmark Suite Example
 
-## benchmark/Project.toml
+## Create the Benchmark Environment (Pkg)
+
+```julia
+using Pkg
+Pkg.activate("benchmark")
+Pkg.add(["BenchmarkTools", "StableRNGs"])
+Pkg.develop(path=pwd())
+```
+
+## Resulting benchmark/Project.toml
 
 ```toml
 [deps]
