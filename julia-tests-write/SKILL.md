@@ -13,11 +13,20 @@ tagging, code quality checks, and static analysis.
 ```
 MyPackage.jl/
 ├── test/
-│   ├── Project.toml       # Test dependencies
+│   ├── Project.toml       # Created via Pkg
 │   ├── runtests.jl        # Test runner with filtering
 │   ├── test_core.jl       # Core functionality tests
 │   ├── test_aqua.jl       # Code quality checks
 │   └── test_jet.jl        # Static analysis
+```
+
+## Test Environment
+
+```julia
+using Pkg
+Pkg.activate("test")
+Pkg.add(["Test", "TestItemRunner", "Aqua", "JET"])
+Pkg.develop(path=pwd())
 ```
 
 ## Basic Test Item
@@ -72,17 +81,19 @@ end
 ```julia
 @testitem "JET" tags=[:jet] begin
     using JET
+    using Test
     using MyPackage
 
-    @test_opt target_modules=[MyPackage] myfunction(1)
-    @test_call target_modules=[MyPackage] myfunction(1)
+    rep = JET.report_package(MyPackage, target_modules=[MyPackage])
+    @show rep # print detected issues
+    @test length(JET.get_reports(rep)) <= 5 # nonzero, in case there are some unresolved issues
+    @test_broken length(JET.get_reports(rep)) == 0 # broken test, in case there are some unresolved issues
 end
 ```
 
 ## Reference
 
 - **[Standard Tests](references/standard-tests.md)** - Aqua, JET, doctests templates
-- **[Tools](references/tools.md)** - ReferenceTests, LocalCoverage, Test module
 
 ## Related Skills
 

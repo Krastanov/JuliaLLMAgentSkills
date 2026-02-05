@@ -19,11 +19,15 @@ end
 ```julia
 # test/test_jet.jl
 @testitem "JET" tags=[:jet] begin
+@testitem "JET" tags=[:jet] begin
     using JET
+    using Test
     using MyPackage
 
-    @test_opt target_modules=[MyPackage] myfunction(1)
-    @test_call target_modules=[MyPackage] myfunction(1)
+    rep = JET.report_package(MyPackage, target_modules=[MyPackage])
+    @show rep # print detected issues
+    @test length(JET.get_reports(rep)) <= 5 # nonzero, in case there are some unresolved issues
+    @test_broken length(JET.get_reports(rep)) == 0 # broken test, in case there are some unresolved issues
 end
 ```
 
@@ -51,6 +55,8 @@ end
 ```
 
 ## Platform-Specific Tests
+
+These need appropriate handling in runtests.jl in order to have them filtered by tags
 
 ```julia
 # test/test_gpu.jl
