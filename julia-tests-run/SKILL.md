@@ -12,28 +12,20 @@ and environment-based test selection using TestItemRunner.jl.
 
 ```bash
 # Standard test run
-julia --project=. -e 'using Pkg; Pkg.test()'
-
-# With threads (recommended)
 julia -tauto --project=. -e 'using Pkg; Pkg.test()'
 
 # Run specific test categories
-JET_TEST=true julia --project=. -e 'using Pkg; Pkg.test()'
-GPU_TEST=cuda julia --project=. -e 'using Pkg; Pkg.test()'
+JET_TEST=true julia -tauto --project=. -e 'using Pkg; Pkg.test()'
+GPU_TEST=cuda julia -tauto --project=. -e 'using Pkg; Pkg.test()'
 ```
 
 ## Test Project Setup
 
-### test/Project.toml
-
-```toml
-[deps]
-Aqua = "4c88cf16-eb10-579e-8560-4a9242c79595"
-Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
-JET = "c3a54625-cd67-489e-a8e7-0a5a0ff4e31b"
-MyPackage = "your-package-uuid"
-Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
-TestItemRunner = "f8b46487-2199-4994-9208-9a1283c18c0a"
+```julia
+using Pkg
+Pkg.activate("test")
+Pkg.add(["Test", "TestItemRunner", "Aqua", "JET", "Documenter"])
+Pkg.develop(path=pwd())
 ```
 
 ## Test Runner with Filtering
@@ -74,10 +66,7 @@ println("Starting tests with $(Threads.nthreads()) threads...")
 ## Reference
 
 - **[Conditional Loading](references/conditional.md)** - Environment-based test selection
-- **[CI Integration](references/ci.md)** - Running tests in CI pipelines
 
 ## Related Skills
 
 - `julia-tests-write` - Writing tests
-- `julia-ci-github` - GitHub Actions CI
-- `julia-ci-buildkite` - Buildkite CI
