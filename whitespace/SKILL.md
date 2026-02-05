@@ -7,23 +7,16 @@ description: Fix trailing whitespace and ensure files end with newlines. Use thi
 
 Fix whitespace issues in source code: trailing whitespace and missing final newlines.
 
-## When to Use
-
-- Before committing code
-- When user asks to clean up or format files
-- When preparing a PR
-- When whitespace issues are flagged by linters or CI
-
 ## Actions
 
 ### Check for issues (dry-run)
 ```bash
-./.claude/skills/whitespace/scripts/whitespace-check.sh [directory] [extensions]
+<skills>/whitespace/scripts/whitespace-check.sh [directory] [extensions]
 ```
 
 ### Fix issues
 ```bash
-./.claude/skills/whitespace/scripts/whitespace-fix.sh [directory] [extensions]
+<skills>/whitespace/scripts/whitespace-fix.sh [directory] [extensions]
 ```
 
 Default extensions: `jl,py,js,ts,tsx,rs,go,md,json,yaml,yml,toml,sh`
