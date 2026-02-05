@@ -24,6 +24,8 @@ Pkg.add("PackageName")                              # Registered package
 Pkg.add(name="PackageName", version="1.2")         # With version
 Pkg.add(url="https://github.com/Org/Package.jl")   # From URL
 Pkg.develop(path="../OtherPackage.jl")             # Dev mode
+Pkg.add("Makie"; target=:weakdeps)                 # Weak dependency
+Pkg.compat("Makie", "0.24")                        # Update [compat]
 ```
 
 ## Removing Dependencies
@@ -77,10 +79,12 @@ Pkg.develop(path="./QuantumSavory.jl")
 
 ## Workspace Subprojects
 
-```toml
-# Project.toml
-[workspace]
-projects = ["docs", "benchmark"]
-```
+Create subprojects with Pkg in their own environments:
 
-Each subproject has its own `Project.toml`.
+```julia
+Pkg.activate("docs")
+Pkg.add("Documenter")
+
+Pkg.activate("benchmark")
+Pkg.add("BenchmarkTools")
+```

@@ -2,7 +2,7 @@
 
 ## Infiltrator.jl (Lightweight)
 
-Minimal performance impact, sets breakpoints in your code:
+Minimal performance impact, sets breakpoints in your code, has to be used interactively, not in scripts:
 
 ```julia
 using Infiltrator
@@ -19,7 +19,7 @@ In the infiltrate REPL:
 
 ## Debugger.jl (Full Stepping)
 
-Step through any code, including external functions:
+Step through any code, including external functions, has to be used interactively, not in scripts:
 
 ```julia
 using Debugger
@@ -46,11 +46,5 @@ versioninfo()              # System info
 
 ```bash
 # Run all tests
-julia --project=. -e 'using Pkg; Pkg.test("PackageName")'
-
-# With threads
-julia -tauto --project=. -e 'using Pkg; Pkg.test()'
-
-# Specific categories
-MYPACKAGE_PLOT_TEST=true julia --project=. -e 'using Pkg; Pkg.test()'
+julia -tauto --project=. -e 'using Pkg; Pkg.test("PackageName")'
 ```
