@@ -25,10 +25,6 @@ const MyPackageSomeDependencyExt = Base.get_extension(MyPackage, :MyPackageSomeD
 import AnotherDep
 const MyPackageAnotherDepExt = Base.get_extension(MyPackage, :MyPackageAnotherDepExt)
 
-# Set display size for consistent output in doctests/examples
-ENV["LINES"] = 80
-ENV["COLUMNS"] = 80
-
 # All modules to document (including extensions!)
 doc_modules = [
     MyPackage,
@@ -192,19 +188,4 @@ format = Documenter.HTML(
 format = Documenter.HTML(
     assets = ["assets/custom.css"]
 )
-```
-
-### Compact API Tables
-
-Add to a markdown page:
-
-```markdown
-```@raw html
-<style>
-    .content table td {
-        padding-top: 0 !important;
-        padding-bottom: 0 !important;
-    }
-</style>
-```
 ```
