@@ -26,25 +26,19 @@ julia -e '
 
 1. First PR: Changes to the dependency (QuantumClifford)
 2. Wait for merge and release
-3. Update downstream package's compat bounds
-4. Second PR: Changes to dependent package (QuantumSavory)
+3. Second PR: Changes to dependent package (QuantumSavory)
 
 ## Managing Compat Bounds
 
-### In the Dependency
+Use Pkg to update compat entries after the dependency is released:
 
-```toml
-# QuantumClifford.jl/Project.toml
-version = "0.12.0"  # Bump for breaking changes
+```julia
+using Pkg
+Pkg.activate(".")
+Pkg.compat("QuantumClifford", "0.12")
 ```
 
-### In the Dependent Package
-
-```toml
-# QuantumSavory.jl/Project.toml
-[compat]
-QuantumClifford = "0.12"  # Update after release
-```
+Bump the dependency version before release as part of the standard release flow.
 
 ## Testing Unreleased Dependencies
 

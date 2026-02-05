@@ -5,17 +5,9 @@ description: Work with multiple inter-related Julia packages simultaneously, man
 
 # Julia Multi-Package Development
 
-Work with multiple inter-related Julia packages simultaneously, managing dependencies
-across packages and testing changes together.
+Work with multiple inter-related Julia packages and test changes together.
 
-## When to Use
-
-- Developing a package alongside its dependencies
-- Working on packages in the same ecosystem
-- Testing changes across package boundaries
-- Coordinating breaking changes across packages
-
-## Setting Up a Shared Environment
+## Set Up a Shared Environment
 
 ```julia
 using Pkg
@@ -73,10 +65,8 @@ julia --project=quantum-dev -e '
 ## Reference
 
 - **[Git Workflow](references/git-workflow.md)** - Branching and PR strategies for multi-package changes
-- **[CI Testing](references/ci-testing.md)** - Buildkite downstream testing configuration
 
 ## Related Skills
 
 - `julia-package-dev` - Single package development
 - `julia-github` - Git and PR workflows
-- `julia-ci-buildkite` - Downstream testing in CI
