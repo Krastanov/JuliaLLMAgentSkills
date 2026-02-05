@@ -5,17 +5,10 @@ description: Create custom Makie plot types using recipes for reusable, themeabl
 
 # Julia Makie Recipes
 
-Create custom Makie plot types using recipes. Recipes enable reusable, themeable visualizations
-that integrate seamlessly with Makie's ecosystem.
+Create custom Makie plot types using recipes. This skill assumes recipes live
+in package extensions (see `julia-pkgextension`).
 
-This skill focuses on creating recipes as package extensions. See `julia-pkgextension` for
-extension setup.
-
-## Recipe Types
-
-### Type Recipes (Simple Conversions)
-
-Convert custom types to existing plot types:
+## Type Recipes (Conversions)
 
 ```julia
 function Makie.convert_arguments(P::Type{<:Makie.Heatmap}, data::MyType)
@@ -24,7 +17,7 @@ function Makie.convert_arguments(P::Type{<:Makie.Heatmap}, data::MyType)
 end
 ```
 
-### Full Recipes (Custom Plot Types)
+## Full Recipes (Custom Plots)
 
 ```julia
 Makie.@recipe(CircuitPlot, circuit) do scene
@@ -35,64 +28,28 @@ Makie.@recipe(CircuitPlot, circuit) do scene
 end
 ```
 
-## @recipe Macro Syntax
-
-```julia
-Makie.@recipe(PlotTypeName, arg1, arg2, ...) do scene
-    Makie.Theme(;
-        attribute_name = default_value,
-    )
-end
-```
-
-**Generated automatically:**
-- Type: `const PlotTypeName{ArgTypes} = Plot{plottypename, ArgTypes}`
-- Functions: `plottypename(args...)` and `plottypename!(ax, args...)`
-
-## Implementing plot!
+## Implement plot!
 
 ```julia
 function Makie.plot!(plot::CircuitPlot)
-    circuit = plot[:circuit][]  # Get argument value
-
-    # Access attributes
-    gw = plot.gatewidth[]
-
-    # Draw using Makie primitives
+    circuit = plot[:circuit][]
     Makie.lines!(plot, xs, ys; color = plot.wirecolor)
     Makie.scatter!(plot, points; markersize = 10)
-    Makie.poly!(plot, vertices; color = :blue)
-    Makie.text!(plot, x, y; text = "label")
-
-    return plot  # Always return plot!
+    return plot
 end
 ```
 
-**Key points:**
-- First argument to primitives is `plot` (the recipe plot object)
-- Access attributes with `plot.attribute[]` for current value
-- Access attributes with `plot.attribute` (no `[]`) for Observable (reactive)
+## Notes
 
-## Makie Primitives Reference
-
-| Primitive | Use Case |
-|-----------|----------|
-| `lines!` | Continuous lines, wires |
-| `linesegments!` | Disconnected line segments |
-| `scatter!` | Points, markers |
-| `poly!` | Filled polygons, rectangles |
-| `text!` | Labels, annotations |
-| `heatmap!` | 2D color grids |
+- Pass the recipe plot object as the first argument to primitives.
+- Use `plot.attr[]` for the current value and `plot.attr` for Observables.
 
 ## Checklist
 
-- [ ] Add Makie to `[weakdeps]` and `[extensions]` in Project.toml
-- [ ] Create stub functions in main package (with docstrings)
-- [ ] Import stub functions in extension
-- [ ] Define recipe with `Makie.@recipe`
-- [ ] Implement `Makie.plot!` method
-- [ ] Always `return plot` from `plot!`
-- [ ] Create `_axis` convenience function for complete figures
+- [ ] Add Makie as a weak dep via Pkg (`pkg> add --weak Makie`)
+- [ ] Add `[extensions]` mapping for `{Package}MakieExt`
+- [ ] Create stub functions in the main package (with docstrings)
+- [ ] Implement the recipe and `Makie.plot!` in the extension
 - [ ] Test with CairoMakie and GLMakie
 
 ## Reference

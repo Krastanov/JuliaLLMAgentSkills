@@ -1,10 +1,19 @@
 # Complete Extension Example
 
+## Add Makie as a Weak Dependency (Pkg)
+
+```julia
+using Pkg
+Pkg.activate(".")
+Pkg.add("Makie"; target=:weakdeps)
+Pkg.compat("Makie", "0.20, 0.21, 0.22, 0.23, 0.24")
+```
+
 ## Project.toml Setup
 
 ```toml
 [weakdeps]
-Makie = "ee78f7c6-11fb-53f2-987a-cfe4a2b5a57a"
+Makie = "...uuid automatically provided by the Pkg command..."
 
 [extensions]
 MyPackageMakieExt = "Makie"
