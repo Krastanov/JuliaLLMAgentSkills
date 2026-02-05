@@ -13,9 +13,9 @@ Pkg.develop(path=pwd())
 
 ```toml
 [deps]
-BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
+BenchmarkTools = "uuid-provided-by-Pkg"
 MyPackage = "your-package-uuid"
-StableRNGs = "860ef19b-820b-49d6-a774-d7a799459cd3"
+StableRNGs = "uuid-provided-by-Pkg"
 ```
 
 ## benchmark/benchmarks.jl

@@ -37,13 +37,6 @@ A collection of Claude Code skills for Julia package development, following mode
 | [julia-bench-write](julia-bench-write/) | Write benchmark suites with BenchmarkTools.jl |
 | [julia-bench-run](julia-bench-run/) | Run benchmark suites and CI performance tracking |
 
-### Continuous Integration
-
-| Skill | Description |
-|-------|-------------|
-| [julia-ci-github](julia-ci-github/) | Configure GitHub Actions CI |
-| [julia-ci-buildkite](julia-ci-buildkite/) | Configure Buildkite CI (GPU testing) |
-
 ### Version Control
 
 | Skill | Description |
@@ -85,9 +78,7 @@ Many skills reference each other. Key relationships:
 julia-package-init
 ├── julia-docs
 ├── julia-tests-run
-├── julia-tests-write
-├── julia-ci-github
-└── julia-ci-buildkite
+└── julia-tests-write
 
 julia-pkgextension
 ├── julia-docs (for documenting extensions)

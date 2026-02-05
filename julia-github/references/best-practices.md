@@ -51,5 +51,5 @@ git checkout -b Feature_X
 
 1. **Keep PRs focused**: One self-contained change per PR
 2. **Don't mix concerns**: Separate feature work from formatting fixes
-3. **Run tests first**: `julia --project=. -e 'using Pkg; Pkg.test()'`
+3. **Run tests first**: `julia -tauto --project=. -e 'using Pkg; Pkg.test()'`
 4. **Update CHANGELOG**: If the project uses one

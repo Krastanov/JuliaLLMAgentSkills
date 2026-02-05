@@ -35,4 +35,3 @@ judge(median(results_new), median(results_old))
 
 - `julia-bench-quick` - Quick impromptu benchmarks
 - `julia-bench-write` - Writing benchmark suites
-- `julia-ci-github` - GitHub Actions configuration

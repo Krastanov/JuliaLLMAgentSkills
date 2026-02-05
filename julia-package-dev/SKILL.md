@@ -55,7 +55,7 @@ Prefer logging macros over `println`:
 
 Enable debug messages:
 ```bash
-JULIA_DEBUG=MyPackage julia --project=.
+JULIA_DEBUG=MyPackage julia -tauto --project=.
 ```
 
 ## Reference

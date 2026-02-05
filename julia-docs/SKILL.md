@@ -45,7 +45,7 @@ deploydocs(repo = "github.com/YourOrg/MyPackage.jl.git")
 ## Build Locally
 
 ```bash
-julia --project=docs docs/make.jl
+julia -tauto --project=docs docs/make.jl
 xdg-open docs/build/index.html  # Linux
 ```
 
