@@ -5,35 +5,9 @@ description: Create new Julia packages with modern infrastructure including test
 
 # Julia Package Initialization
 
-Create a new Julia package with modern infrastructure: tests, documentation, CI, and more.
+Create a new Julia package with tests, docs, and CI scaffolding.
 
-## Package Structure
-
-```
-MyPackage.jl/
-├── .github/
-│   ├── dependabot.yml
-│   └── workflows/
-│       ├── ci.yml
-│       ├── downgrade.yml
-│       └── TagBot.yml
-├── docs/
-│   ├── Project.toml
-│   ├── make.jl
-│   └── src/
-├── src/
-│   └── MyPackage.jl
-├── test/
-│   ├── Project.toml
-│   └── runtests.jl
-├── .gitignore
-├── LICENSE
-└── Project.toml
-```
-
-## Quick Start
-
-### Using PkgTemplates.jl (Recommended)
+## Quick Start (PkgTemplates.jl)
 
 ```julia
 using PkgTemplates
@@ -53,80 +27,30 @@ t = Template(;
 t("MyPackage")
 ```
 
-### Manual Creation
-
-```bash
-mkdir -p MyPackage.jl/{src,test,docs/src,.github/workflows}
-```
-
-## Core Files
-
-### Project.toml
-
-```toml
-name = "MyPackage"
-uuid = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"  # Generate with `using UUIDs; uuid4()`
-version = "0.1.0"
-authors = ["Your Name <your@email.com>"]
-
-[workspace]
-projects = ["docs", "benchmark"]
-
-[deps]
-# Direct dependencies here
-
-[compat]
-julia = "1.10"
-```
-
-### src/MyPackage.jl
+## Manual Minimal Init
 
 ```julia
-module MyPackage
-
-export main_function, MainType
-
-include("types.jl")
-include("functions.jl")
-
-end # module
+using Pkg
+Pkg.generate("MyPackage")
 ```
 
-### .gitignore
+Use Pkg to add dependencies and create subprojects (`docs/`, `test/`).
 
-```gitignore
-Manifest.toml
-LocalPreferences.toml
-*.cov
-.vscode
-scratch/
-```
+## Secrets
 
-## Secrets Setup
-
-| Secret | Purpose | How to Generate |
-|--------|---------|-----------------|
-| `CODECOV_TOKEN` | Coverage upload | From codecov.io dashboard |
-| `DOCUMENTER_KEY` | Doc deployment | `DocumenterTools.genkeys()` |
+- `CODECOV_TOKEN` for coverage uploads (from codecov.io)
+- `DOCUMENTER_KEY` for doc deployment (`DocumenterTools.genkeys()`)
 
 ## Initialization Checklist
 
-- [ ] `Project.toml` with UUID, version, compat
-- [ ] `[workspace]` entry for subprojects
-- [ ] `src/MyPackage.jl` with module structure
-- [ ] `test/` setup (see `julia-tests-run` skill)
-- [ ] `docs/` setup (see `julia-docs` skill)
-- [ ] `.gitignore` and `LICENSE`
-- [ ] `.github/workflows/ci.yml`
+- [ ] Package created via PkgTemplates or `Pkg.generate`
+- [ ] `src/MyPackage.jl` exports the public API
+- [ ] `test/` and `docs/` subprojects created via Pkg
+- [ ] CI workflows added (`ci.yml`, `TagBot.yml`)
 - [ ] Secrets added to GitHub
-
-## Reference
-
-- **[CI Workflows](references/workflows.md)** - Complete GitHub Actions workflow templates
 
 ## Related Skills
 
 - `julia-tests-run` - Test runner setup
 - `julia-tests-write` - Writing tests
 - `julia-docs` - Documentation setup
-- `julia-ci-github` - CI configuration details
