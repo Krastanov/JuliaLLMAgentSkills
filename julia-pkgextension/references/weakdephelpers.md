@@ -48,8 +48,7 @@ Without Hecke loaded:
 ```julia
 julia> using MyPackage
 julia> LPCode(args...)
-ERROR: `LPCode` depends on the package(s) `Hecke` but you have not installed or
-imported them yet. Immediately after an `import Hecke`, `LPCode` will be available.
+[...] # an informative error hint telling the user to import Hecke (the weak dep)
 ```
 
 After loading Hecke:
