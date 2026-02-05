@@ -5,42 +5,22 @@ description: Add citations and bibliographies to Julia documentation using Docum
 
 # Julia Documentation Citations
 
-Add citations and bibliographies to Julia documentation using DocumenterCitations.jl.
+Add citations and bibliographies to Julia documentation with
+DocumenterCitations.jl.
 
-## Quick Setup
+## Add Dependencies (docs/)
 
-### 1. Add to docs/Project.toml
-
-```toml
-[deps]
-Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
-DocumenterCitations = "daee34ce-89f3-4625-b898-19384cb65244"
-
-[compat]
-Documenter = "1"
-DocumenterCitations = "1"
+```julia
+using Pkg
+Pkg.activate("docs")
+Pkg.add(["Documenter", "DocumenterCitations"])
 ```
 
-### 2. Create docs/src/references.bib
+## Add a BibTeX File
 
-```bibtex
-@article{GoerzQ2022,
-    author = {Goerz, Michael H. and others},
-    title = {Quantum Optimal Control},
-    journal = {Physical Review A},
-    year = {2022},
-    doi = {10.1103/PhysRevA.105.032401}
-}
+Create `docs/src/references.bib` with your entries.
 
-@book{NielsenChuang2010,
-    author = {Nielsen, Michael A. and Chuang, Isaac L.},
-    title = {Quantum Computation and Quantum Information},
-    publisher = {Cambridge University Press},
-    year = {2010}
-}
-```
-
-### 3. Configure docs/make.jl
+## Configure docs/make.jl
 
 ```julia
 using Documenter
@@ -49,12 +29,11 @@ using MyPackage
 
 bib = CitationBibliography(
     joinpath(@__DIR__, "src", "references.bib"),
-    style = :authoryear  # or :numeric, :alpha
+    style = :authoryear
 )
 
 makedocs(
     plugins = [bib],
-    sitename = "MyPackage.jl",
     pages = [
         "Home" => "index.md",
         "Bibliography" => "bibliography.md",
@@ -62,28 +41,20 @@ makedocs(
 )
 ```
 
-### 4. Create docs/src/bibliography.md
+## Add a Bibliography Page
 
-```markdown
+````markdown
 # Bibliography
 
 ```@bibliography
 ```
-```
+````
 
-## Citation Syntax
-
-### In Markdown
+## Cite in Docs and Docstrings
 
 ```markdown
-The stabilizer formalism [gottesman1998heisenberg](@cite) enables efficient simulation.
-
-See [NielsenChuang2010; Chapter 10](@cite) for details.
-
-Previous work [GoerzQ2022, NielsenChuang2010](@cite) has shown...
+See [NielsenChuang2010](@cite) for details.
 ```
-
-### In Docstrings
 
 ```julia
 """
@@ -94,54 +65,13 @@ Simulate using the stabilizer formalism [gottesman1998heisenberg](@cite).
 function stabilizer_simulation(circuit) end
 ```
 
-### Footnote Style
-
-```markdown
-The tableaux formalism[^1] enables efficient simulation.
-
-[^1]: [gottesman1998heisenberg](@cite)
-```
-
-## Citation Styles
-
-```julia
-bib = CitationBibliography("refs.bib", style = :authoryear)  # (Gottesman, 1998)
-bib = CitationBibliography("refs.bib", style = :numeric)     # [1]
-bib = CitationBibliography("refs.bib", style = :alpha)       # [Got98]
-```
-
-## Bibliography Options
-
-```markdown
-# All cited references
-```@bibliography
-```
-
-# Specific entries only
-```@bibliography
-Keys = ["GoerzQ2022", "NielsenChuang2010"]
-```
-
-# All entries (including uncited)
-```@bibliography
-*
-```
-
-# Per-page bibliography
-```@bibliography
-Pages = ["chapter1.md"]
-```
-```
-
 ## Reference
 
-- **[Complete Examples](references/examples.md)** - Full make.jl, BibTeX, and page examples
+- **[Complete Examples](references/examples.md)** - Styles, filters, and full pages
 
 ## Checklist
 
-- [ ] `DocumenterCitations` in `docs/Project.toml`
-- [ ] `.bib` file in `docs/src/`
-- [ ] `CitationBibliography` created in `make.jl`
-- [ ] Plugin passed to `makedocs(plugins = [bib], ...)`
-- [ ] Bibliography page created with `@bibliography` block
+- [ ] `DocumenterCitations` added to docs env via Pkg
+- [ ] `docs/src/references.bib` created
+- [ ] `CitationBibliography` added to `makedocs`
 - [ ] Bibliography page included in `pages`
