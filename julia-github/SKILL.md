@@ -52,31 +52,6 @@ gh pr create \
     --repo OriginalOrg/PackageName.jl
 ```
 
-## GitHub CLI Quick Reference
-
-| Task | Command |
-|------|---------|
-| Create PR | `gh pr create --title "..." --body "..."` |
-| List PRs | `gh pr list` |
-| View PR | `gh pr view 123` |
-| Checkout PR | `gh pr checkout 123` |
-| Merge PR | `gh pr merge 123` |
-| List issues | `gh issue list` |
-| View issue | `gh issue view 123` |
-
-## Git Quick Reference
-
-| Task | Command |
-|------|---------|
-| Clone | `git clone URL` |
-| Pull | `git pull origin branch` |
-| Push | `git push origin branch` |
-| Branch | `git checkout -b name` |
-| Status | `git status` |
-| Diff | `git diff` |
-| Log | `git log --oneline` |
-| Stash | `git stash` / `git stash pop` |
-
 ## Reference
 
 - **[Best Practices](references/best-practices.md)** - Commit messages, branch naming, atomic commits
