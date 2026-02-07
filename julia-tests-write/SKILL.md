@@ -7,6 +7,7 @@ description: Write tests for Julia packages using TestItemRunner.jl patterns inc
 
 Write tests for Julia packages using TestItemRunner.jl with support for
 tagging, code quality checks, and static analysis.
+For focused `@testitem` authoring guidance, use `julia-testitem-write`.
 
 ## Project Structure
 
@@ -98,4 +99,6 @@ end
 ## Related Skills
 
 - `julia-tests-run` - Running tests
+- `julia-testitem-write` - Dedicated `@testitem` writing patterns
+- `julia-testitem-run` - Running filtered `@testitem` subsets
 - `julia-doctests` - Doctest configuration

@@ -28,6 +28,8 @@ A collection of Claude Code skills for Julia package development, following mode
 |-------|-------------|
 | [julia-tests-run](julia-tests-run/) | Run tests with filtering and conditional loading |
 | [julia-tests-write](julia-tests-write/) | Write tests with TestItemRunner.jl patterns |
+| [julia-testitem-run](julia-testitem-run/) | Run `@testitem` suites from CLI with robust filtering |
+| [julia-testitem-write](julia-testitem-write/) | Write `@testitem` tests for reliable filtering |
 
 ### Benchmarking
 
@@ -85,6 +87,15 @@ julia-pkgextension
 ├── julia-tests-run (for running extension tests)
 ├── julia-tests-write (for writing extension tests)
 └── julia-makie-recipes (example use case)
+
+julia-tests-run
+└── julia-testitem-run (for `@testitem`-specific filtering)
+
+julia-tests-write
+└── julia-testitem-write (for `@testitem` structure/tagging)
+
+julia-testitem-run
+└── julia-testitem-write (for filter-friendly test design)
 
 julia-docs
 ├── julia-docstrings

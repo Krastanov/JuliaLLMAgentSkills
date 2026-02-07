@@ -7,16 +7,13 @@ description: Run Julia tests with filtering, conditional loading, and environmen
 
 Run tests for Julia packages with support for filtering, conditional loading,
 and environment-based test selection using TestItemRunner.jl.
+For `@testitem`-specific CLI filtering patterns, use `julia-testitem-run`.
 
 ## Quick Commands
 
 ```bash
 # Standard test run
 julia -tauto --project=. -e 'using Pkg; Pkg.test()'
-
-# Run specific test categories
-JET_TEST=true julia -tauto --project=. -e 'using Pkg; Pkg.test()'
-GPU_TEST=cuda julia -tauto --project=. -e 'using Pkg; Pkg.test()'
 ```
 
 ## Test Project Setup
@@ -53,7 +50,7 @@ println("Starting tests with $(Threads.nthreads()) threads...")
 @run_package_tests filter=testfilter
 ```
 
-## Common Tags
+### Common Tags
 
 | Tag | Purpose |
 |-----|---------|
@@ -70,3 +67,5 @@ println("Starting tests with $(Threads.nthreads()) threads...")
 ## Related Skills
 
 - `julia-tests-write` - Writing tests
+- `julia-testitem-run` - Dedicated `@testitem` filtering workflows
+- `julia-testitem-write` - Writing filter-friendly `@testitem`s

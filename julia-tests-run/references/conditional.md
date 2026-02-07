@@ -43,7 +43,7 @@ if !Sys.iswindows()
 end
 ```
 
-## Combined Filter Function
+## Combined Filter Function in case you are using TestItemRunner
 
 ```julia
 testfilter = ti -> begin
@@ -73,7 +73,7 @@ testfilter = ti -> begin
 end
 ```
 
-## Test Categories Pattern
+## Test Categories Pattern in case you are running TestItemRunner
 
 ```julia
 testfilter = ti -> begin
