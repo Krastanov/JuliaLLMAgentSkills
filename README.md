@@ -44,6 +44,7 @@ A collection of Claude Code skills for Julia package development, following mode
 | Skill | Description |
 |-------|-------------|
 | [julia-github](julia-github/) | Git and GitHub CLI workflows |
+| [github-act](github-act/) | Run and debug GitHub Actions locally with `gh act` |
 
 ### Visualization
 
