@@ -46,6 +46,13 @@ A collection of Claude Code skills for Julia package development, following mode
 | [julia-async](julia-async/) | Asynchronous programming with Julia tasks/channels |
 | [julia-threads](julia-threads/) | Multithreading patterns and thread safety in Julia |
 
+### Data Serialization
+
+| Skill | Description |
+|-------|-------------|
+| [julia-toml](julia-toml/) | Parse and write TOML files with Julia TOML stdlib |
+| [julia-yaml](julia-yaml/) | Parse and write YAML files with YAML.jl |
+
 ### Version Control
 
 | Skill | Description |
@@ -135,6 +142,12 @@ julia-threads
 
 julia-external-cmd
 └── julia-async (for subprocess IO with tasks)
+
+julia-toml
+└── julia-package-dev (for Project.toml and config workflows)
+
+julia-yaml
+└── julia-package-dev (for YAML config workflows)
 ```
 
 ## Contributing
