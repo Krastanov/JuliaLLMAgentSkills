@@ -46,6 +46,12 @@ A collection of Claude Code skills for Julia package development, following mode
 | [julia-github](julia-github/) | Git and GitHub CLI workflows |
 | [github-act](github-act/) | Run and debug GitHub Actions locally with `gh act` |
 
+### CLI Development
+
+| Skill | Description |
+|-------|-------------|
+| [julia-comonicon](julia-comonicon/) | Build Julia CLI interfaces with Comonicon.jl |
+
 ### Visualization
 
 | Skill | Description |
@@ -106,6 +112,10 @@ julia-docs
 julia-bench-write
 ├── julia-bench-quick (for patterns)
 └── julia-bench-run (for execution)
+
+julia-comonicon
+├── julia-package-dev (for package workflows)
+└── julia-package-init (for project bootstrapping)
 ```
 
 ## Contributing
