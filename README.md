@@ -39,6 +39,13 @@ A collection of Claude Code skills for Julia package development, following mode
 | [julia-bench-write](julia-bench-write/) | Write benchmark suites with BenchmarkTools.jl |
 | [julia-bench-run](julia-bench-run/) | Run benchmark suites and CI performance tracking |
 
+### Concurrency
+
+| Skill | Description |
+|-------|-------------|
+| [julia-async](julia-async/) | Asynchronous programming with Julia tasks/channels |
+| [julia-threads](julia-threads/) | Multithreading patterns and thread safety in Julia |
+
 ### Version Control
 
 | Skill | Description |
@@ -51,6 +58,12 @@ A collection of Claude Code skills for Julia package development, following mode
 | Skill | Description |
 |-------|-------------|
 | [julia-comonicon](julia-comonicon/) | Build Julia CLI interfaces with Comonicon.jl |
+
+### System Integration
+
+| Skill | Description |
+|-------|-------------|
+| [julia-external-cmd](julia-external-cmd/) | Run external programs safely from Julia |
 
 ### Visualization
 
@@ -116,6 +129,12 @@ julia-bench-write
 julia-comonicon
 ├── julia-package-dev (for package workflows)
 └── julia-package-init (for project bootstrapping)
+
+julia-threads
+└── julia-async (for task-level coordination)
+
+julia-external-cmd
+└── julia-async (for subprocess IO with tasks)
 ```
 
 ## Contributing
