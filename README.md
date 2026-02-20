@@ -53,6 +53,13 @@ A collection of Claude Code skills for Julia package development, following mode
 | [julia-toml](julia-toml/) | Parse and write TOML files with Julia TOML stdlib |
 | [julia-yaml](julia-yaml/) | Parse and write YAML files with YAML.jl |
 
+### Tabular Data
+
+| Skill | Description |
+|-------|-------------|
+| [julia-csv](julia-csv/) | Parse and write CSV files with CSV.jl |
+| [julia-prettytables](julia-prettytables/) | Render text/markdown/HTML tables with PrettyTables.jl |
+
 ### Version Control
 
 | Skill | Description |
@@ -148,6 +155,9 @@ julia-toml
 
 julia-yaml
 └── julia-package-dev (for YAML config workflows)
+
+julia-prettytables
+└── julia-csv (common ingestion source in table workflows)
 ```
 
 ## Contributing
