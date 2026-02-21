@@ -74,6 +74,12 @@ A collection of Claude Code skills for Julia package development, following mode
 | [julia-comonicon](julia-comonicon/) | Build Julia CLI interfaces with Comonicon.jl |
 | [julia-pkg-app](julia-pkg-app/) | Build standalone apps with Pkg's native app support |
 
+### Data Storage
+
+| Skill | Description |
+|-------|-------------|
+| [julia-scratch](julia-scratch/) | Manage mutable scratch spaces with Scratch.jl |
+
 ### System Integration
 
 | Skill | Description |
@@ -166,6 +172,11 @@ julia-yaml
 
 julia-prettytables
 └── julia-csv (common ingestion source in table workflows)
+
+julia-scratch
+├── julia-package-dev (for package development workflows)
+├── julia-package-init (for adding Scratch.jl as a dependency)
+└── julia-toml (for version-specific scratch key patterns)
 ```
 
 ## Contributing

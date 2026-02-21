@@ -69,3 +69,4 @@ JULIA_DEBUG=MyPackage julia -tauto --project=.
 - `julia-tests-write` - Writing tests
 - `julia-multipackage` - Multi-package workflows
 - `julia-pkg-app` - Building standalone CLI apps with Pkg
+- `julia-scratch` - Mutable scratch spaces for package data caches
