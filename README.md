@@ -72,6 +72,7 @@ A collection of Claude Code skills for Julia package development, following mode
 | Skill | Description |
 |-------|-------------|
 | [julia-comonicon](julia-comonicon/) | Build Julia CLI interfaces with Comonicon.jl |
+| [julia-pkg-app](julia-pkg-app/) | Build standalone apps with Pkg's native app support |
 
 ### System Integration
 
@@ -142,7 +143,14 @@ julia-bench-write
 
 julia-comonicon
 ├── julia-package-dev (for package workflows)
-└── julia-package-init (for project bootstrapping)
+├── julia-package-init (for project bootstrapping)
+└── julia-pkg-app (lightweight alternative without arg parsing)
+
+julia-pkg-app
+├── julia-comonicon (full-featured CLI alternative)
+├── julia-package-init (for project bootstrapping)
+├── julia-package-dev (for development workflow)
+└── julia-toml (for Project.toml configuration)
 
 julia-threads
 └── julia-async (for task-level coordination)
