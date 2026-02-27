@@ -19,7 +19,6 @@ end
 ```julia
 # test/test_jet.jl
 @testitem "JET" tags=[:jet] begin
-@testitem "JET" tags=[:jet] begin
     using JET
     using Test
     using MyPackage

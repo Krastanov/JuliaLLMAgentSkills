@@ -102,3 +102,4 @@ end
 - `julia-testitem-write` - Dedicated `@testitem` writing patterns
 - `julia-testitem-run` - Running filtered `@testitem` subsets
 - `julia-doctests` - Doctest configuration
+- `julia-jet` - JET.jl analysis overview and configuration

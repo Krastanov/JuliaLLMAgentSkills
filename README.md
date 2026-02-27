@@ -31,6 +31,14 @@ A collection of Claude Code skills for Julia package development, following mode
 | [julia-testitem-run](julia-testitem-run/) | Run `@testitem` suites from CLI with robust filtering |
 | [julia-testitem-write](julia-testitem-write/) | Write `@testitem` tests for reliable filtering |
 
+### Static Analysis
+
+| Skill | Description |
+|-------|-------------|
+| [julia-jet](julia-jet/) | JET.jl overview, setup, and configuration |
+| [julia-jet-errors](julia-jet-errors/) | Error analysis with `@report_call` and `report_package` |
+| [julia-jet-opt](julia-jet-opt/) | Optimization analysis with `@report_opt` |
+
 ### Benchmarking
 
 | Skill | Description |
@@ -172,6 +180,23 @@ julia-yaml
 
 julia-prettytables
 └── julia-csv (common ingestion source in table workflows)
+
+julia-jet
+├── julia-jet-errors (error analysis details)
+├── julia-jet-opt (optimization analysis details)
+├── julia-perf (performance optimization)
+└── julia-tests-write (JET test templates)
+
+julia-jet-errors
+├── julia-jet (overview)
+├── julia-jet-opt (optimization analysis)
+└── julia-perf (type stability fixes)
+
+julia-jet-opt
+├── julia-jet (overview)
+├── julia-jet-errors (error analysis)
+├── julia-perf (performance workflow)
+└── julia-bench-quick (verify dispatch fixes)
 
 julia-scratch
 ├── julia-package-dev (for package development workflows)
