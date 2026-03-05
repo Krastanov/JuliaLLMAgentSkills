@@ -95,3 +95,57 @@ than the generic signatures that `report_package` infers.
 - JET analysis can be slow on large packages — consider running only on
   the main branch or in a separate CI job
 - JET results depend on the Julia version — pin to a specific stable release
+
+## Conditional JET Loading (Required Pattern)
+
+**IMPORTANT**: JET depends on Julia compiler internals and frequently breaks on
+nightly/pre-release Julia versions. **Never add JET to `test/Project.toml`
+directly.** Instead, add it conditionally in `test/runtests.jl` using
+`Pkg.add("JET")` only when explicitly requested via an environment variable.
+
+### Pattern
+
+In `test/runtests.jl`, before loading TestItemRunner:
+
+```julia
+JET_flag = false
+
+if get(ENV, "JET_TEST", "") == "true"
+    JET_flag = true
+else
+    @info "Skipping JET tests -- must be explicitly enabled."
+end
+
+using Pkg
+JET_flag && Pkg.add("JET")
+
+using MyPackage
+using TestItemRunner
+
+testfilter = ti -> begin
+    exclude = Symbol[]
+
+    if JET_flag
+        return :jet in ti.tags
+    else
+        push!(exclude, :jet)
+    end
+
+    # ... other exclusions ...
+
+    return all(!in(exclude), ti.tags)
+end
+
+@run_package_tests filter=testfilter
+```
+
+### Key Points
+
+1. **Do NOT list JET in `test/Project.toml`** — this causes resolution
+   failures on Julia nightly where JET has no compatible version
+2. **Use `Pkg.add("JET")` conditionally** — only when `JET_TEST=true`
+3. **Tag JET test items with `:jet`** — so the filter can isolate them
+4. **When `JET_flag` is true, run ONLY JET tests** — return early with
+   `:jet in ti.tags` to avoid running the full test suite alongside JET
+5. This pattern is used in QuantumClifford.jl, BPGates.jl, and should be
+   followed by all packages in the ecosystem
