@@ -128,6 +128,43 @@ julia> @elapsed sleep(0.1)
 ```
 ````
 
+### Filter Escaping in Docstrings
+
+Use character classes instead of backslash escapes in doctest filters inside
+docstrings: `[(]` for `\(`, `[)]` for `\)`, `[0-9]` for `\d`.
+
+**`raw"""` does NOT work** for docstrings — they silently don't attach to
+functions.
+
+### Filters Must Match Both Outputs
+
+**Critical**: Documenter only applies a filter when it matches **both** the
+expected and evaluated output. A filter that only matches one side is silently
+skipped. For version-dependent output, use optional groups:
+
+````julia
+# CORRECT — optional group matches both "3:2" and "3:2 (empty range)"
+# Note: \$ in docstring source becomes $ (end-of-string anchor) in the regex
+"""
+```jldoctest; filter = r"( [(]empty range[)])?\$"
+julia> myfunction(3)
+3:2
+```
+"""
+````
+
+````julia
+# WRONG — only matches "3:2 (empty range)", not "3:2", so never applied
+"""
+```jldoctest; filter = r" [(]empty range[)]"
+julia> myfunction(3)
+3:2
+```
+"""
+````
+
+See [Common Pitfalls](pitfalls.md#filters-must-match-both-outputs) for details.
+
 ## Testing Exceptions
 
 ````julia
