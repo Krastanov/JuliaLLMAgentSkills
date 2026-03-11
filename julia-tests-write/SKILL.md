@@ -1,13 +1,14 @@
 ---
 name: julia-tests-write
-description: Write tests for Julia packages using TestItemRunner.jl patterns including Aqua, JET, and doctests. Use this skill when adding or organizing tests.
+description: Write tests for Julia packages using the standard library Test, including Aqua, JET, and doctests. Use this skill when adding or organizing tests.
 ---
 
 # Writing Julia Tests
 
-Write tests for Julia packages using TestItemRunner.jl with support for
-tagging, code quality checks, and static analysis.
-For focused `@testitem` authoring guidance, use `julia-testitem-write`.
+Write tests for Julia packages using the standard library `Test`, with support
+for code quality checks and static analysis. If a repository already uses
+`@testitem`, treat that as a separate setup (optional, not preferred) and see
+`julia-retestitems-run` plus `julia-testitem-write`.
 
 ## Project Structure
 
@@ -26,14 +27,16 @@ MyPackage.jl/
 ```julia
 using Pkg
 Pkg.activate("test")
-Pkg.add(["Test", "TestItemRunner", "Aqua", "JET"])
+Pkg.add(["Test", "Aqua", "JET", "Documenter"])
 Pkg.develop(path=pwd())
 ```
 
-## Basic Test Item
+## Basic Test Set
 
 ```julia
-@testitem "Core functionality" begin
+using Test
+
+@testset "Core functionality" begin
     using MyPackage
 
     @test myfunction(1) == expected_value
@@ -41,33 +44,24 @@ Pkg.develop(path=pwd())
 end
 ```
 
-## Tagged Test Item
+## Additional Test Set
 
 ```julia
-@testitem "Advanced feature" tags=[:advanced] begin
+@testset "Advanced feature" begin
     using MyPackage
 
     @test advanced_function() works
 end
 ```
 
-## Common Tags
-
-| Tag | Purpose |
-|-----|---------|
-| `:jet` | JET static analysis |
-| `:aqua` | Aqua code quality |
-| `:doctests` | Documentation tests |
-| `:cuda` | CUDA GPU tests |
-| `:plotting` | Visualization tests |
-| `:core` | Core functionality |
-
 ## Standard Test Files
 
 ### Aqua Tests (test/test_aqua.jl)
 
 ```julia
-@testitem "Aqua" tags=[:aqua] begin
+using Test
+
+@testset "Aqua" begin
     using Aqua
     using MyPackage
 
@@ -80,9 +74,10 @@ end
 ### JET Tests (test/test_jet.jl)
 
 ```julia
-@testitem "JET" tags=[:jet] begin
+using Test
+
+@testset "JET" begin
     using JET
-    using Test
     using MyPackage
 
     rep = JET.report_package(MyPackage, target_modules=[MyPackage])
@@ -99,7 +94,7 @@ end
 ## Related Skills
 
 - `julia-tests-run` - Running tests
-- `julia-testitem-write` - Dedicated `@testitem` writing patterns
-- `julia-testitem-run` - Running filtered `@testitem` subsets
+- `julia-retestitems-run` - Optional `@testitem` runner patterns
+- `julia-testitem-write` - Optional `@testitem` authoring patterns
 - `julia-doctests` - Doctest configuration
 - `julia-jet` - JET.jl analysis overview and configuration

@@ -26,9 +26,10 @@ A collection of Claude Code skills for Julia package development, following mode
 
 | Skill | Description |
 |-------|-------------|
-| [julia-tests-run](julia-tests-run/) | Run tests with filtering and conditional loading |
-| [julia-tests-write](julia-tests-write/) | Write tests with TestItemRunner.jl patterns |
-| [julia-testitem-run](julia-testitem-run/) | Run `@testitem` suites from CLI with robust filtering |
+| [julia-tests-run](julia-tests-run/) | Run tests with the standard library Test and conditional loading |
+| [julia-tests-write](julia-tests-write/) | Write tests with the standard library Test |
+| [julia-retestitems-run](julia-retestitems-run/) | Run `@testitem` suites with ReTestItems.jl (parallel + filtering) |
+| [julia-testitem-run](julia-testitem-run/) | Legacy TestItemRunner.jl `@testitem` runner |
 | [julia-testitem-write](julia-testitem-write/) | Write `@testitem` tests for reliable filtering |
 
 ### Static Analysis
@@ -138,13 +139,16 @@ julia-pkgextension
 └── julia-makie-recipes (example use case)
 
 julia-tests-run
-└── julia-testitem-run (for `@testitem`-specific filtering)
+└── julia-retestitems-run (optional, if the repo uses `@testitem`)
 
 julia-tests-write
-└── julia-testitem-write (for `@testitem` structure/tagging)
+└── julia-testitem-write (optional, if the repo uses `@testitem`)
+
+julia-retestitems-run
+└── julia-testitem-write (for filter-friendly test design)
 
 julia-testitem-run
-└── julia-testitem-write (for filter-friendly test design)
+└── julia-testitem-write (legacy runner)
 
 julia-docs
 ├── julia-docstrings

@@ -1,11 +1,12 @@
 ---
 name: julia-testitem-write
-description: Write Julia @testitem tests that are easy to run from the command line and easy to filter by tags, names, and files. Use when adding or refactoring test items for TestItemRunner.jl workflows.
+description: Write Julia @testitem tests that are easy to filter by tags, names, and files. Runner-agnostic; ReTestItems.jl is the preferred runner when executing them.
 ---
 
 # Writing Filter-Friendly `@testitem` Tests
 
 Write `@testitem`s so subset runs are predictable in CI and agent workflows.
+ReTestItems.jl is the preferred runner for executing `@testitem` suites.
 
 ## Required Practices
 
@@ -40,6 +41,7 @@ to help human users when they interactively work with the tests.
 
 ## Related Skills
 
-- `julia-testitem-run` - CLI execution and filtering patterns
+- `julia-retestitems-run` - Preferred ReTestItems.jl runner patterns
+- `julia-testitem-run` - Legacy TestItemRunner runner
 - `julia-tests-write` - Broader Julia test templates
 - `julia-tests-run` - General runner setup

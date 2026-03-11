@@ -103,9 +103,12 @@ nightly/pre-release Julia versions. **Never add JET to `test/Project.toml`
 directly.** Instead, add it conditionally in `test/runtests.jl` using
 `Pkg.add("JET")` only when explicitly requested via an environment variable.
 
+ReTestItems.jl is the preferred runner for `@testitem` suites. Trigger JET-only
+runs by calling `runtests(; tags=:jet)` when `JET_TEST=true`.
+
 ### Pattern
 
-In `test/runtests.jl`, before loading TestItemRunner:
+In `test/runtests.jl`:
 
 ```julia
 JET_flag = false
@@ -120,23 +123,13 @@ using Pkg
 JET_flag && Pkg.add("JET")
 
 using MyPackage
-using TestItemRunner
+using ReTestItems
 
-testfilter = ti -> begin
-    exclude = Symbol[]
-
-    if JET_flag
-        return :jet in ti.tags
-    else
-        push!(exclude, :jet)
-    end
-
-    # ... other exclusions ...
-
-    return all(!in(exclude), ti.tags)
+if JET_flag
+    runtests("test/"; tags=:jet)
+else
+    runtests("test/")
 end
-
-@run_package_tests filter=testfilter
 ```
 
 ### Key Points
@@ -144,8 +137,8 @@ end
 1. **Do NOT list JET in `test/Project.toml`** — this causes resolution
    failures on Julia nightly where JET has no compatible version
 2. **Use `Pkg.add("JET")` conditionally** — only when `JET_TEST=true`
-3. **Tag JET test items with `:jet`** — so the filter can isolate them
-4. **When `JET_flag` is true, run ONLY JET tests** — return early with
-   `:jet in ti.tags` to avoid running the full test suite alongside JET
+3. **Tag JET test items with `:jet`** — so ReTestItems can isolate them
+4. **When `JET_flag` is true, run ONLY JET tests** — call
+   `runtests(; tags=:jet)` in that job
 5. This pattern is used in QuantumClifford.jl, BPGates.jl, and should be
    followed by all packages in the ecosystem

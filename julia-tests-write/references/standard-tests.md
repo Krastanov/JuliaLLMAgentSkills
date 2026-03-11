@@ -4,7 +4,9 @@
 
 ```julia
 # test/test_aqua.jl
-@testitem "Aqua" tags=[:aqua] begin
+using Test
+
+@testset "Aqua" begin
     using Aqua
     using MyPackage
 
@@ -18,9 +20,10 @@ end
 
 ```julia
 # test/test_jet.jl
-@testitem "JET" tags=[:jet] begin
+using Test
+
+@testset "JET" begin
     using JET
-    using Test
     using MyPackage
 
     rep = JET.report_package(MyPackage, target_modules=[MyPackage])
@@ -34,7 +37,9 @@ end
 
 ```julia
 # test/test_doctests.jl
-@testitem "Doctests" tags=[:doctests] begin
+using Test
+
+@testset "Doctests" begin
     using Documenter
     using MyPackage
 
@@ -55,18 +60,26 @@ end
 
 ## Platform-Specific Tests
 
-These need appropriate handling in runtests.jl in order to have them filtered by tags
+Guard optional tests with explicit environment flags and platform checks in
+`test/runtests.jl`, then include the files or run `@testset` conditionally.
 
 ```julia
 # test/test_gpu.jl
-@testitem "CUDA tests" tags=[:cuda, :gpu] begin
+using Test
+
+@testset "CUDA tests" begin
     using CUDA
     using MyPackage
 
     @test cuda_function() works
 end
+```
 
-@testitem "Oscar tests" tags=[:oscar_required] begin
+```julia
+# test/test_oscar.jl
+using Test
+
+@testset "Oscar tests" begin
     using Oscar
     using MyPackage
 
@@ -74,13 +87,28 @@ end
 end
 ```
 
+```julia
+# test/runtests.jl
+using Test
+
+if get(ENV, "GPU_TEST", "") == "cuda" && !Sys.iswindows()
+    include("test_gpu.jl")
+end
+
+if !Sys.iswindows() && Sys.ARCH == :x86_64 && VERSION >= v"1.11"
+    include("test_oscar.jl")
+end
+```
+
 ## Setup and Teardown
 
 ```julia
-@testitem "With setup" begin
+using Test
+
+@testset "With setup" begin
     using MyPackage
 
-    # Setup runs once per test item
+    # Setup runs once per test set
     data = load_test_data()
 
     @test process(data) == expected
@@ -103,9 +131,13 @@ module TestUtils
         # Common verification logic
     end
 end
+```
 
+```julia
 # test/test_core.jl
-@testitem "Core" begin
+using Test
+
+@testset "Core" begin
     include("TestUtils.jl")
     using .TestUtils
 

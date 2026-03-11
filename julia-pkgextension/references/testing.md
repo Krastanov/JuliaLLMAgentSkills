@@ -2,6 +2,9 @@
 
 ## Testing Extensions
 
+ReTestItems.jl is the preferred runner for `@testitem` suites. If a project
+already uses `@testitem`, run tagged extension tests with ReTestItems.
+
 ### In Test Suite
 
 ```julia
@@ -22,17 +25,13 @@ end
 
 ```julia
 # test/runtests.jl
-using TestItemRunner
+using ReTestItems
 
-testfilter = ti -> begin
-    exclude = Symbol[]
-    if get(ENV, "HECKE_TEST", "") != "true"
-        push!(exclude, :hecke)
-    end
-    return all(!in(exclude), ti.tags)
+if get(ENV, "HECKE_TEST", "") == "true"
+    runtests("test/"; tags=:hecke)
+else
+    runtests("test/")
 end
-
-@run_package_tests filter=testfilter
 ```
 
 ## Documenting Extensions

@@ -1,5 +1,10 @@
 # Conditional Test Loading
 
+These patterns show how to gate optional tests using environment variables
+and platform checks with the standard library `Test`.
+If a repository already uses `@testitem`, prefer ReTestItems.jl for running
+those tests (see `julia-retestitems-run`).
+
 ## Environment-Based Dependencies
 
 ```julia
@@ -43,48 +48,20 @@ if !Sys.iswindows()
 end
 ```
 
-## Combined Filter Function in case you are using TestItemRunner
+## Conditional Includes
 
 ```julia
-testfilter = ti -> begin
-    exclude = Symbol[]
+# test/runtests.jl
+using Test
 
-    # JET-only mode
-    if get(ENV, "JET_TEST", "") == "true"
-        return :jet in ti.tags
-    else
-        push!(exclude, :jet)
-    end
+include("test_core.jl")
+include("test_aqua.jl")
 
-    # Platform exclusions
-    if !Oscar_flag
-        push!(exclude, :oscar_required)
-    end
-    if !GPU_flag
-        push!(exclude, :cuda, :gpu)
-    end
-
-    # Version exclusions
-    if !(VERSION >= v"1.10")
-        push!(exclude, :doctests, :aqua)
-    end
-
-    return all(!in(exclude), ti.tags)
+if get(ENV, "JET_TEST", "") == "true"
+    include("test_jet.jl")
 end
-```
 
-## Test Categories Pattern in case you are running TestItemRunner
-
-```julia
-testfilter = ti -> begin
-    exclude = Symbol[]
-
-    if get(ENV, "TEST_CATEGORY", "") == "base"
-        return (:core in ti.tags) && all(!in(exclude), ti.tags)
-    elseif get(ENV, "TEST_CATEGORY", "") == "encoding"
-        return (:encoding in ti.tags) && all(!in(exclude), ti.tags)
-    end
-
-    return all(!in(exclude), ti.tags)
+if get(ENV, "DOCTESTS", "") == "true"
+    include("test_doctests.jl")
 end
 ```

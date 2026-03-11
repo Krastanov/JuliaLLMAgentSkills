@@ -1,12 +1,14 @@
 ---
 name: julia-testitem-run
-description: Run Julia @testitem tests from the command line with TestItemRunner.jl, including reliable filtering by tags, names, and filenames for CI or agentic workflows. Use when asked to run only a subset of test items.
+description: Run Julia @testitem tests from the command line with TestItemRunner.jl. ReTestItems.jl is preferred for new work; use this only for legacy TestItemRunner projects that need CLI filtering by tags, names, or filenames.
 ---
 
 # Running `@testitem` Tests (CLI)
 
-Use direct command-line filters for one-off agent runs. Avoid a large
-environment-variable router unless a project already has one.
+ReTestItems.jl is the preferred runner for `@testitem` suites. Use
+`julia-retestitems-run` unless the repository already depends on
+TestItemRunner.jl. Avoid a large environment-variable router unless a
+project already has one.
 
 ## Minimal Runner
 
@@ -40,6 +42,7 @@ julia -tauto --project=test -e 'using TestItemRunner; TestItemRunner.run_tests("
 
 ## Related Skills
 
+- `julia-retestitems-run` - Preferred ReTestItems.jl runner patterns
 - `julia-testitem-write` - Write filter-friendly `@testitem`s
 - `julia-tests-run` - General Julia test execution patterns
 - `julia-tests-write` - General test organization and templates
