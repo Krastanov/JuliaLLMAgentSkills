@@ -47,10 +47,14 @@ doctest(MyPackage)
 ## In the Test Suite
 
 ```julia
-@testitem "Doctests" begin
-    using Documenter
-    using MyPackage
-    DocMeta.setdocmeta!(MyPackage, :DocTestSetup, :(using MyPackage); recursive=true)
+# test/test_doctests.jl
+using Documenter
+using Test
+using MyPackage
+
+DocMeta.setdocmeta!(MyPackage, :DocTestSetup, :(using MyPackage); recursive=true)
+
+@testset "Doctests" begin
     doctest(MyPackage; manual=false)
 end
 ```

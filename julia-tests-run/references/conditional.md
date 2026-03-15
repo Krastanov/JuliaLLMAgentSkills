@@ -43,48 +43,30 @@ if !Sys.iswindows()
 end
 ```
 
-## Combined Filter Function in case you are using TestItemRunner
+## Conditional Include Pattern
 
 ```julia
-testfilter = ti -> begin
-    exclude = Symbol[]
+using MyPackage
+using Test
 
-    # JET-only mode
+@testset "MyPackage" begin
+    include("test_core.jl")
+
     if get(ENV, "JET_TEST", "") == "true"
-        return :jet in ti.tags
-    else
-        push!(exclude, :jet)
+        include("test_jet.jl")
     end
 
-    # Platform exclusions
-    if !Oscar_flag
-        push!(exclude, :oscar_required)
-    end
-    if !GPU_flag
-        push!(exclude, :cuda, :gpu)
+    if Oscar_flag
+        include("test_oscar.jl")
     end
 
-    # Version exclusions
-    if !(VERSION >= v"1.10")
-        push!(exclude, :doctests, :aqua)
+    if GPU_flag
+        include("test_gpu.jl")
     end
 
-    return all(!in(exclude), ti.tags)
-end
-```
-
-## Test Categories Pattern in case you are running TestItemRunner
-
-```julia
-testfilter = ti -> begin
-    exclude = Symbol[]
-
-    if get(ENV, "TEST_CATEGORY", "") == "base"
-        return (:core in ti.tags) && all(!in(exclude), ti.tags)
-    elseif get(ENV, "TEST_CATEGORY", "") == "encoding"
-        return (:encoding in ti.tags) && all(!in(exclude), ti.tags)
+    if VERSION >= v"1.10"
+        include("test_aqua.jl")
+        include("test_doctests.jl")
     end
-
-    return all(!in(exclude), ti.tags)
 end
 ```

@@ -6,33 +6,25 @@
 
 ```julia
 # test/test_hecke_extension.jl
-@testitem "Hecke extension" tags=[:hecke] begin
-    using Hecke
-    using MyPackage
+using Hecke
+using MyPackage
+using Test
 
-    # Get extension module for testing internals
-    const HeckeExt = Base.get_extension(MyPackage, :MyPackageHeckeExt)
+# Get extension module for testing internals
+const HeckeExt = Base.get_extension(MyPackage, :MyPackageHeckeExt)
 
+@testset "Hecke extension" begin
     @test LPCode(args...) isa MyPackage.AbstractCode
     @test HeckeExt.internal_function() == expected
 end
 ```
 
-### Conditional Test Loading
+### Conditional Loading in runtests.jl
 
 ```julia
-# test/runtests.jl
-using TestItemRunner
-
-testfilter = ti -> begin
-    exclude = Symbol[]
-    if get(ENV, "HECKE_TEST", "") != "true"
-        push!(exclude, :hecke)
-    end
-    return all(!in(exclude), ti.tags)
+if get(ENV, "HECKE_TEST", "") == "true"
+    include("test_hecke_extension.jl")
 end
-
-@run_package_tests filter=testfilter
 ```
 
 ## Documenting Extensions

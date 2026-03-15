@@ -26,10 +26,12 @@ A collection of Claude Code skills for Julia package development, following mode
 
 | Skill | Description |
 |-------|-------------|
-| [julia-tests-run](julia-tests-run/) | Run tests with filtering and conditional loading |
-| [julia-tests-write](julia-tests-write/) | Write tests with TestItemRunner.jl patterns |
-| [julia-testitem-run](julia-testitem-run/) | Run `@testitem` suites from CLI with robust filtering |
-| [julia-testitem-write](julia-testitem-write/) | Write `@testitem` tests for reliable filtering |
+| [julia-tests-run](julia-tests-run/) | Run tests with standard Test.jl and Pkg.test |
+| [julia-tests-write](julia-tests-write/) | Write tests with @testset, Aqua, JET, doctests |
+| [julia-testitem-run](julia-testitem-run/) | Run `@testitem` suites with TestItemRunner.jl filtering |
+| [julia-testitem-write](julia-testitem-write/) | Write `@testitem` tests for TestItemRunner.jl |
+| [julia-parallel-tests-run](julia-parallel-tests-run/) | Run tests in parallel with ParallelTestRunner.jl |
+| [julia-parallel-tests-write](julia-parallel-tests-write/) | Write tests for ParallelTestRunner.jl |
 
 ### Static Analysis
 
@@ -39,10 +41,11 @@ A collection of Claude Code skills for Julia package development, following mode
 | [julia-jet-errors](julia-jet-errors/) | Error analysis with `@report_call` and `report_package` |
 | [julia-jet-opt](julia-jet-opt/) | Optimization analysis with `@report_opt` |
 
-### Benchmarking
+### Performance
 
 | Skill | Description |
 |-------|-------------|
+| [julia-perf](julia-perf/) | Optimize Julia code for performance |
 | [julia-bench-quick](julia-bench-quick/) | Quick impromptu benchmarks with @btime/@b |
 | [julia-bench-write](julia-bench-write/) | Write benchmark suites with BenchmarkTools.jl |
 | [julia-bench-run](julia-bench-run/) | Run benchmark suites and CI performance tracking |
@@ -100,6 +103,17 @@ A collection of Claude Code skills for Julia package development, following mode
 |-------|-------------|
 | [julia-makie-recipes](julia-makie-recipes/) | Create custom Makie plot recipes |
 
+### Terminal UI
+
+| Skill | Description |
+|-------|-------------|
+| [julia-term](julia-term/) | Terminal output and TUI apps with Term.jl |
+| [julia-term-style](julia-term-style/) | Styled text with colors and themes |
+| [julia-term-renderables](julia-term-renderables/) | Panels, tables, trees with Term.jl |
+| [julia-term-layout](julia-term-layout/) | Layout composition with Term.jl |
+| [julia-term-apps](julia-term-apps/) | Interactive TUI apps with Term.jl |
+| [julia-term-utilities](julia-term-utilities/) | Progress bars, logging with Term.jl |
+
 ### Utilities
 
 | Skill | Description |
@@ -138,13 +152,18 @@ julia-pkgextension
 └── julia-makie-recipes (example use case)
 
 julia-tests-run
-└── julia-testitem-run (for `@testitem`-specific filtering)
+├── julia-testitem-run (TestItemRunner.jl alternative)
+└── julia-parallel-tests-run (ParallelTestRunner.jl alternative)
 
 julia-tests-write
-└── julia-testitem-write (for `@testitem` structure/tagging)
+├── julia-testitem-write (TestItemRunner.jl alternative)
+└── julia-parallel-tests-write (ParallelTestRunner.jl alternative)
 
 julia-testitem-run
 └── julia-testitem-write (for filter-friendly test design)
+
+julia-parallel-tests-run
+└── julia-parallel-tests-write (for file-per-test structure)
 
 julia-docs
 ├── julia-docstrings

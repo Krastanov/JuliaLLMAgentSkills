@@ -183,31 +183,34 @@ ERROR: DivideError: integer division error
 Load the extension and include it in the modules list:
 
 ```julia
-@testitem "Doctests" begin
-    using Documenter
-    using MyPackage
+# test/test_doctests.jl
+using Documenter
+using Test
+using MyPackage
 
-    extensions = []
+extensions = []
 
-    # Load extension by importing its trigger package
-    import SomeDependency
-    const MyPackageSomeDependencyExt = Base.get_extension(MyPackage, :MyPackageSomeDependencyExt)
-    push!(extensions, MyPackageSomeDependencyExt)
+# Load extension by importing its trigger package
+import SomeDependency
+const MyPackageSomeDependencyExt = Base.get_extension(MyPackage, :MyPackageSomeDependencyExt)
+push!(extensions, MyPackageSomeDependencyExt)
 
-    # Conditional extensions
-    @static if VERSION >= v"1.11"
-        import AnotherDep
-        const MyPackageAnotherDepExt = Base.get_extension(MyPackage, :MyPackageAnotherDepExt)
-        push!(extensions, MyPackageAnotherDepExt)
-    end
+# Conditional extensions
+@static if VERSION >= v"1.11"
+    import AnotherDep
+    const MyPackageAnotherDepExt = Base.get_extension(MyPackage, :MyPackageAnotherDepExt)
+    push!(extensions, MyPackageAnotherDepExt)
+end
 
-    # Set display size for consistent output
-    ENV["LINES"] = 80
-    ENV["COLUMNS"] = 80
+# Set display size for consistent output
+ENV["LINES"] = 80
+ENV["COLUMNS"] = 80
 
-    DocMeta.setdocmeta!(MyPackage, :DocTestSetup, :(using MyPackage); recursive=true)
+DocMeta.setdocmeta!(MyPackage, :DocTestSetup, :(using MyPackage); recursive=true)
 
-    modules = [MyPackage, MyPackage.SubModule, extensions...]
+modules = [MyPackage, MyPackage.SubModule, extensions...]
+
+@testset "Doctests" begin
     doctest(nothing, modules)
 end
 ```

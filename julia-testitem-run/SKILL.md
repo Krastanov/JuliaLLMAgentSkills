@@ -5,8 +5,7 @@ description: Run Julia @testitem tests from the command line with TestItemRunner
 
 # Running `@testitem` Tests (CLI)
 
-Use direct command-line filters for one-off agent runs. Avoid a large
-environment-variable router unless a project already has one.
+Run tests written with `@testitem` using TestItemRunner.jl.
 
 ## Minimal Runner
 
@@ -15,7 +14,7 @@ julia -tauto --project=. -e 'using Pkg; Pkg.test()'
 julia -tauto --project=test -e 'using TestItemRunner; TestItemRunner.run_tests("test")'
 ```
 
-## CLI Filtering Invocations
+## CLI Filtering
 
 ```bash
 # Include only one tag
@@ -31,15 +30,45 @@ julia -tauto --project=test -e 'using TestItemRunner; TestItemRunner.run_tests("
 julia -tauto --project=test -e 'using TestItemRunner; TestItemRunner.run_tests("test"; filter=ti->(endswith(ti.filename, "test_fft.jl") && !(:slow in ti.tags)))'
 ```
 
-## Filtering Rules to Keep Correct
+## runtests.jl with Tag Filtering
 
-1. Treat tags as `Symbol`s, not strings.
-2. Match filenames with regex or `endswith` because `ti.filename` is a full path.
-3. Keep filter expressions pure and quick; they run once per discovered test item.
-4. Use `filter` and `verbose` consistently in both `run_tests` and `@run_package_tests`.
+```julia
+using MyPackage
+using TestItemRunner
+
+testfilter = ti -> begin
+    exclude = Symbol[]
+    if get(ENV, "JET_TEST", "") == "true"
+        return :jet in ti.tags  # JET-only mode
+    else
+        push!(exclude, :jet)
+    end
+    if !(VERSION >= v"1.10")
+        push!(exclude, :doctests, :aqua)
+    end
+    return all(!in(exclude), ti.tags)
+end
+
+@run_package_tests filter=testfilter
+```
+
+## Test Project Setup
+
+```julia
+using Pkg
+Pkg.activate("test")
+Pkg.add(["Test", "TestItemRunner", "Aqua", "JET", "Documenter"])
+Pkg.develop(path=pwd())
+```
+
+## Filtering Rules
+
+1. Tags are `Symbol`s, not strings.
+2. `ti.filename` is a full path — use `endswith` or regex.
+3. Filter functions must be pure and fast (run once per discovered item).
+4. Use `filter` kwarg in both `run_tests` and `@run_package_tests`.
 
 ## Related Skills
 
 - `julia-testitem-write` - Write filter-friendly `@testitem`s
-- `julia-tests-run` - General Julia test execution patterns
-- `julia-tests-write` - General test organization and templates
+- `julia-tests-run` - Standard Test.jl execution
