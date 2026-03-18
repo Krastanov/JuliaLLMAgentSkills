@@ -137,5 +137,5 @@ Set `JULIA_SCRATCH_TRACK_ACCESS=0` to disable logging to `logs/scratch_usage.tom
 ## Related Skills
 
 - `julia-package-dev` - Package development workflows
-- `julia-package-init` - Package bootstrapping (add Scratch.jl as a dependency)
+- `julia-package-dev` - Package bootstrapping (add Scratch.jl as a dependency)
 - `julia-toml` - TOML parsing (used for version-specific scratch keys)

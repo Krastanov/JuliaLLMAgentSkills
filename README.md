@@ -8,7 +8,6 @@ A collection of Claude Code skills for Julia package development, following mode
 
 | Skill | Description |
 |-------|-------------|
-| [julia-package-init](julia-package-init/) | Create new Julia packages with modern infrastructure |
 | [julia-package-dev](julia-package-dev/) | Develop Julia packages, multi-package workspaces, extensions, and Pkg apps |
 
 ### Documentation
@@ -122,10 +121,6 @@ description: Brief description of when to use this skill.
 Many skills reference each other. Key relationships:
 
 ```
-julia-package-init
-├── julia-docs
-└── julia-tests
-
 julia-package-dev
 ├── julia-tests (for package test setup and execution)
 ├── julia-docs (for package docs and doctests)
@@ -139,7 +134,6 @@ julia-bench
 └── julia-perf (performance diagnosis before or after benchmarking)
 
 julia-comonicon
-├── julia-package-init (for project bootstrapping)
 ├── julia-package-dev (for package workflows)
 └── julia-toml (for Project.toml configuration)
 
@@ -169,7 +163,6 @@ julia-tests
 
 julia-scratch
 ├── julia-package-dev (for package development workflows)
-├── julia-package-init (for adding Scratch.jl as a dependency)
 └── julia-toml (for version-specific scratch key patterns)
 ```
 

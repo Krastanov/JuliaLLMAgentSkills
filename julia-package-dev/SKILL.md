@@ -1,12 +1,51 @@
 ---
 name: julia-package-dev
-description: Develop Julia packages in local environments, including multi-package workspaces, package extensions, and Pkg apps. Use when managing package environments, dependencies, package structure, and related development workflows.
+description: Create and develop Julia packages in local environments, including package bootstrapping, multi-package workspaces, package extensions, and Pkg apps. Use when starting a package or managing package environments, dependencies, structure, and related development workflows.
 ---
 
 # Julia Package Development
 
-Use this skill for package-oriented Julia development: local environments,
-multi-package workspaces, extensions, and Pkg apps.
+Use this skill for package-oriented Julia work: bootstrapping a package,
+local environments, multi-package workspaces, extensions, and Pkg apps.
+
+## Starting a Package
+
+### PkgTemplates.jl
+
+```julia
+using PkgTemplates
+
+t = Template(;
+    user = "YourGitHubUsername",
+    authors = "Your Name <your@email.com>",
+    plugins = [
+        Git(; manifest=false),
+        GitHubActions(; extra_versions=["1.10", "nightly"]),
+        Codecov(),
+        Documenter{GitHubActions}(),
+        License(; name="MIT"),
+    ],
+)
+
+t("MyPackage")
+```
+
+### Minimal Start
+
+```julia
+using Pkg
+Pkg.generate("MyPackage")
+```
+
+Then add dependencies and create `docs/` and `test/` subprojects with Pkg.
+
+### Bootstrap Checklist
+
+- [ ] Package created with `PkgTemplates` or `Pkg.generate`
+- [ ] `src/MyPackage.jl` exposes the public API
+- [ ] `test/` and `docs/` environments exist
+- [ ] CI workflows are added
+- [ ] Required secrets such as `CODECOV_TOKEN` and `DOCUMENTER_KEY` are configured
 
 ## Core Workflow
 
@@ -77,4 +116,3 @@ Pkg.develop(path="./QuantumSavory.jl")
 - `julia-tests`
 - `julia-docs`
 - `julia-scratch`
-
