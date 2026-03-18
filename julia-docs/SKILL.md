@@ -58,5 +58,7 @@ them.
 - [ ] `docs/Project.toml` exists and includes doc dependencies
 - [ ] `docs/make.jl` loads all relevant modules and extensions
 - [ ] `DocMeta.setdocmeta!` is configured for doctests
+- [ ] Inline doctest filters use Documenter's `filter = ...` syntax when the scope should be a single block
+- [ ] Docstring-specific setup uses block `setup = ...` or module-level `DocMeta`, not ad hoc assumptions
+- [ ] `JULIA_DEBUG=Documenter` is used when filter behavior is unclear
 - [ ] Citation setup is added if the docs cite papers or books
-

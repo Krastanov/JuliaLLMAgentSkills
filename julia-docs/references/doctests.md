@@ -74,8 +74,33 @@ doctestfilters = [
 doctest(MyPackage; doctestfilters)
 ```
 
-Documenter only applies a filter when it matches both the expected and actual
-output. For version-specific output, make the varying part optional.
+Documenter applies filters by running `replace` on the expected output and on the
+actual output before comparing them. A filter does not need to match both sides;
+if it matches only one side, that side is transformed and the other is left as-is.
+
+Use a doctest-local filter when the scope should be one block:
+
+````markdown
+```jldoctest; filter = [r" \+ 0\.0im", r"slot = \d+\.(\d+)" => s"slot = Slot \1"]
+julia> f()
+...
+```
+````
+
+Documenter also supports block-local setup and teardown, which is often the
+cleanest option for inline docstrings:
+
+````markdown
+```jldoctest; setup = :(using ResumableFunctions: @resumable)
+julia> @resumable function f()
+           1
+       end
+f (generic function with 1 method)
+```
+````
+
+If filter behavior is unclear, run doctests with `JULIA_DEBUG=Documenter` to
+inspect the raw and filtered outputs.
 
 ## Common Pitfalls
 
@@ -84,3 +109,4 @@ output. For version-specific output, make the varying part optional.
 - Use character classes like `[(]` and `[0-9]` instead of backslash escapes.
 - Set `ENV["LINES"]` and `ENV["COLUMNS"]` for stable pretty-printing output.
 - Use `[...]` to truncate stack traces or long error output.
+- Do not assume a filter must match both expected and actual output to take effect.
