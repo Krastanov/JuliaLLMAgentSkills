@@ -65,8 +65,7 @@ JULIA_DEBUG=MyPackage julia -tauto --project=.
 
 ## Related Skills
 
-- `julia-tests-run` - Running tests
-- `julia-tests-write` - Writing tests
+- `julia-tests` - Running and writing tests
 - `julia-multipackage` - Multi-package workflows
 - `julia-pkg-app` - Building standalone CLI apps with Pkg
 - `julia-scratch` - Mutable scratch spaces for package data caches

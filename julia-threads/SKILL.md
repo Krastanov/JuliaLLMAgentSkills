@@ -57,4 +57,4 @@ Treat race freedom as a hard requirement:
 ## Related Skills
 
 - `julia-async` - task/channel concurrency and event scheduling
-- `julia-tests-run` - validating threaded behavior in tests
+- `julia-tests` - validating threaded behavior in tests

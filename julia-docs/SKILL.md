@@ -1,18 +1,14 @@
 ---
 name: julia-docs
-description: Build documentation websites for Julia packages using Documenter.jl. Use this skill when setting up docs/, configuring make.jl, or writing documentation pages.
+description: Build Julia package documentation with Documenter.jl, including docstrings, doctests, and citations. Use when setting up docs/, configuring make.jl, or writing documentation content.
 ---
 
 # Julia Documentation
 
-Build documentation for Julia packages using Documenter.jl.
+Use this skill for the full documentation workflow: docs site setup, docstrings,
+doctests, and citations.
 
-**Related skills:**
-- `julia-docstrings` - Writing docstrings
-- `julia-doctests` - Writing doctests
-- `julia-doccitations` - Citations and bibliographies
-
-## Create the Docs Environment
+## Quick Start
 
 ```julia
 using Pkg
@@ -20,8 +16,6 @@ Pkg.activate("docs")
 Pkg.add("Documenter")
 Pkg.develop(path=pwd())
 ```
-
-## Create docs/make.jl
 
 ```julia
 using Documenter
@@ -32,31 +26,37 @@ DocMeta.setdocmeta!(MyPackage, :DocTestSetup, :(using MyPackage); recursive=true
 makedocs(
     sitename = "MyPackage.jl",
     modules = [MyPackage],
-    pages = [
-        "Home" => "index.md",
-        "Manual" => "manual.md",
-        "API" => "API.md",
-    ]
+    pages = ["Home" => "index.md", "API" => "api.md"],
 )
-
-deploydocs(repo = "github.com/YourOrg/MyPackage.jl.git")
 ```
-
-## Build Locally
 
 ```bash
 julia -tauto --project=docs docs/make.jl
-xdg-open docs/build/index.html  # Linux
 ```
 
-## Reference
+## What Lives Here
 
-- **[Page Templates](references/templates.md)** - Landing, tutorial, API templates
-- **[makedocs Options](references/makedocs-options.md)** - Doctests, extensions, format
-- **[@-Block Reference](references/at-blocks.md)** - Doc blocks, cross-refs, admonitions, and other special syntax
+- Documentation site structure and `docs/make.jl`
+- Docstring conventions and templates
+- Doctest authoring and Documenter-specific setup
+- Citations and bibliography integration
+
+Run doctests via `julia-tests`; use this skill for how to write and configure
+them.
+
+## References
+
+- `references/page-templates.md`
+- `references/docstring-templates.md`
+- `references/doctests.md`
+- `references/makedocs-options.md`
+- `references/at-blocks.md`
+- `references/citations-examples.md`
 
 ## Checklist
 
-- [ ] Docs env created via Pkg (`docs/Project.toml`)
-- [ ] `docs/make.jl` includes all modules (including extensions)
-- [ ] `deploydocs` configured in CI
+- [ ] `docs/Project.toml` exists and includes doc dependencies
+- [ ] `docs/make.jl` loads all relevant modules and extensions
+- [ ] `DocMeta.setdocmeta!` is configured for doctests
+- [ ] Citation setup is added if the docs cite papers or books
+

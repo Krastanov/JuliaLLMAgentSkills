@@ -51,7 +51,6 @@ Use Pkg to add dependencies and create subprojects (`docs/`, `test/`).
 
 ## Related Skills
 
-- `julia-tests-run` - Test runner setup
-- `julia-tests-write` - Writing tests
+- `julia-tests` - Test runner setup and test organization
 - `julia-docs` - Documentation setup
 - `julia-pkg-app` - Building standalone CLI apps with Pkg's native app support

@@ -56,7 +56,7 @@ end
 
 ## Platform-Specific Tests
 
-Conditionally included from runtests.jl (see `julia-tests-run`):
+Conditionally included from `runtests.jl` (see `julia-tests`):
 
 ```julia
 # test/test_gpu.jl

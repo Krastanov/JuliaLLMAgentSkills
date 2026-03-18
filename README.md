@@ -17,29 +17,19 @@ A collection of Claude Code skills for Julia package development, following mode
 
 | Skill | Description |
 |-------|-------------|
-| [julia-docs](julia-docs/) | Build documentation with Documenter.jl |
-| [julia-docstrings](julia-docstrings/) | Write docstrings using DocStringExtensions.jl |
-| [julia-doctests](julia-doctests/) | Configure and write doctests |
-| [julia-doccitations](julia-doccitations/) | Add citations with DocumenterCitations.jl |
+| [julia-docs](julia-docs/) | Build documentation with Documenter.jl, docstrings, doctests, and citations |
 
 ### Testing & Quality
 
 | Skill | Description |
 |-------|-------------|
-| [julia-tests-run](julia-tests-run/) | Run tests with standard Test.jl and Pkg.test |
-| [julia-tests-write](julia-tests-write/) | Write tests with @testset, Aqua, JET, doctests |
-| [julia-testitem-run](julia-testitem-run/) | Run `@testitem` suites with TestItemRunner.jl filtering |
-| [julia-testitem-write](julia-testitem-write/) | Write `@testitem` tests for TestItemRunner.jl |
-| [julia-parallel-tests-run](julia-parallel-tests-run/) | Run tests in parallel with ParallelTestRunner.jl |
-| [julia-parallel-tests-write](julia-parallel-tests-write/) | Write tests for ParallelTestRunner.jl |
+| [julia-tests](julia-tests/) | Run and write tests with Test.jl, TestItemRunner.jl, and ParallelTestRunner.jl |
 
 ### Static Analysis
 
 | Skill | Description |
 |-------|-------------|
-| [julia-jet](julia-jet/) | JET.jl overview, setup, and configuration |
-| [julia-jet-errors](julia-jet-errors/) | Error analysis with `@report_call` and `report_package` |
-| [julia-jet-opt](julia-jet-opt/) | Optimization analysis with `@report_opt` |
+| [julia-jet](julia-jet/) | JET.jl overview, error analysis, optimization analysis, and configuration |
 
 ### Performance
 
@@ -107,12 +97,7 @@ A collection of Claude Code skills for Julia package development, following mode
 
 | Skill | Description |
 |-------|-------------|
-| [julia-term](julia-term/) | Terminal output and TUI apps with Term.jl |
-| [julia-term-style](julia-term-style/) | Styled text with colors and themes |
-| [julia-term-renderables](julia-term-renderables/) | Panels, tables, trees with Term.jl |
-| [julia-term-layout](julia-term-layout/) | Layout composition with Term.jl |
-| [julia-term-apps](julia-term-apps/) | Interactive TUI apps with Term.jl |
-| [julia-term-utilities](julia-term-utilities/) | Progress bars, logging with Term.jl |
+| [julia-term](julia-term/) | Terminal output, layouts, renderables, progress bars, and TUI apps with Term.jl |
 
 ### Utilities
 
@@ -122,7 +107,9 @@ A collection of Claude Code skills for Julia package development, following mode
 
 ## Usage
 
-These skills are automatically available to Claude Code when working in projects that include this `.claude/skills/` directory. Claude will use the appropriate skill based on the task context.
+These skills are automatically available when working in projects that include
+this `.agents/skills/` directory. The agent will use the appropriate skill
+based on the task context.
 
 ### Skill Header Format
 
@@ -142,33 +129,15 @@ Many skills reference each other. Key relationships:
 ```
 julia-package-init
 ├── julia-docs
-├── julia-tests-run
-└── julia-tests-write
+└── julia-tests
 
 julia-pkgextension
 ├── julia-docs (for documenting extensions)
-├── julia-tests-run (for running extension tests)
-├── julia-tests-write (for writing extension tests)
+├── julia-tests (for extension test setup and execution)
 └── julia-makie-recipes (example use case)
 
-julia-tests-run
-├── julia-testitem-run (TestItemRunner.jl alternative)
-└── julia-parallel-tests-run (ParallelTestRunner.jl alternative)
-
-julia-tests-write
-├── julia-testitem-write (TestItemRunner.jl alternative)
-└── julia-parallel-tests-write (ParallelTestRunner.jl alternative)
-
-julia-testitem-run
-└── julia-testitem-write (for filter-friendly test design)
-
-julia-parallel-tests-run
-└── julia-parallel-tests-write (for file-per-test structure)
-
 julia-docs
-├── julia-docstrings
-├── julia-doctests
-└── julia-doccitations
+└── julia-tests (for running doctests in the test suite)
 
 julia-bench-write
 ├── julia-bench-quick (for patterns)
@@ -201,21 +170,13 @@ julia-prettytables
 └── julia-csv (common ingestion source in table workflows)
 
 julia-jet
-├── julia-jet-errors (error analysis details)
-├── julia-jet-opt (optimization analysis details)
 ├── julia-perf (performance optimization)
-└── julia-tests-write (JET test templates)
+└── julia-tests (JET test templates)
 
-julia-jet-errors
-├── julia-jet (overview)
-├── julia-jet-opt (optimization analysis)
-└── julia-perf (type stability fixes)
-
-julia-jet-opt
-├── julia-jet (overview)
-├── julia-jet-errors (error analysis)
+julia-tests
+├── julia-docs (doctest authoring and Documenter setup)
 ├── julia-perf (performance workflow)
-└── julia-bench-quick (verify dispatch fixes)
+└── julia-jet (static analysis in test suites)
 
 julia-scratch
 ├── julia-package-dev (for package development workflows)

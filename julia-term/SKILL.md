@@ -1,77 +1,104 @@
 ---
 name: julia-term
-description: Work with Term.jl for styled terminal output and TUI apps in Julia. Use when building terminal interfaces, styled output, or interactive applications with Term.jl.
+description: Work with Term.jl for styled terminal output, renderables, layouts, progress bars, repr helpers, and interactive TUI apps. Use when building terminal interfaces or rich terminal output in Julia.
 ---
 
-# Term.jl Development
+# Term.jl
 
-Term.jl is a Julia library for styled terminal output and TUI applications, inspired
-by Python's `rich`.
+Use this skill for all Term.jl work. Keep the entry point small and load only
+the reference file that matches the task.
 
 ## Quick Start
 
 ```julia
-using Pkg
-Pkg.add("Term")
-
 using Term
 
-# Styled text with markup
-tprint("{bold green}Hello{/bold green}, {red}world{/red}!")
-
-# Panel
-print(Panel("content"; title="My Panel", style="blue"))
-
-# Stacking
-Panel(width=20) * Panel(width=20)  # side by side
-Panel(width=20) / Panel(width=20)  # stacked vertically
+tprint("{bold green}Hello{/bold green}")
+print(Panel("content"; title="Example", width=40))
+print(Panel(width=20) * Panel(width=20))
 ```
 
-## Module Architecture
-
-| Module | Import | Purpose |
-|--------|--------|---------|
-| `Term` | `using Term` | Core: tprint, Panel, markup, themes |
-| `Term.Tables` | `using Term.Tables` | Table renderable |
-| `Term.Trees` | `using Term.Trees` | Tree renderable |
-| `Term.Dendograms` | `using Term.Dendograms` | Dendogram renderable |
-| `Term.Annotations` | `using Term.Annotations` | Annotation renderable |
-| `Term.Layout` | `using Term.Layout` | hstack, vstack, Spacer, hLine, vLine |
-| `Term.Grid` | `using Term.Grid` | grid() layout |
-| `Term.Compositors` | `using Term.Compositors` | Compositor layout |
-| `Term.Progress` | `using Term.Progress` | Progress bars |
-| `Term.LiveWidgets` | `using Term.LiveWidgets` | App, widgets, keyboard |
-| `Term.Repr` | `using Term.Repr` | @with_repr, termshow, @showme |
-| `Term.Consoles` | `using Term.Consoles` | Console width simulation |
-| `Term.TermMarkdown` | `using Term.TermMarkdown` | Markdown rendering |
-
-## Key Configuration
+## Core Modules
 
 ```julia
 using Term
-
-# Theme -- controls all styling (colors, box types, etc.)
-TERM_THEME[]                     # current theme (Ref{Theme})
-set_theme(Theme(box=:HEAVY))     # change theme
-
-# Console width
-Term.DEFAULT_CONSOLE_WIDTH[]     # default max width (88)
-
-# Disable color output
-Term.NOCOLOR[] = true            # strip all ANSI codes
+using Term.Layout
+using Term.Progress
+using Term.LiveWidgets
 ```
 
-## Sub-Skills
+- `Term` covers markup, `tprint`, `Panel`, themes, repr, and markdown rendering.
+- `Term.Layout` covers stacking, alignment, grids, spacers, and compositors.
+- `Term.Progress` covers progress bars and custom progress columns.
+- `Term.LiveWidgets` covers `App`, widgets, keyboard handling, and navigation.
 
-| Skill | Use for |
-|-------|---------|
-| `julia-term-style` | Markup syntax, color macros, themes, tprint |
-| `julia-term-renderables` | Panel, Table, Tree, Dendogram, Annotation |
-| `julia-term-layout` | Stacking, alignment, grid, Compositor |
-| `julia-term-utilities` | Progress bars, logging, repr, introspection |
-| `julia-term-apps` | Interactive TUI: App, widgets, keyboard input |
+## Common Patterns
 
-## Related Skills
+### Styling
 
-- `julia-package-dev` -- Julia package development workflow
-- `julia-tests-write` -- testing patterns for Julia packages
+```julia
+tprint("{bold blue}status{/bold blue}")
+set_theme(Theme(box=:HEAVY))
+```
+
+Open these only when needed:
+
+- `references/color-names.md`
+- `references/theme-fields.md`
+
+### Renderables
+
+```julia
+panel = Panel("body"; title="Title", width=50)
+```
+
+Open these only when needed:
+
+- `references/box-types.md`
+- `references/table-api.md`
+
+### Layout
+
+```julia
+layout = Panel(width=20) * Panel(width=20)
+```
+
+For the expression DSL and `Compositor`, open:
+
+- `references/compositor-dsl.md`
+
+### Utilities
+
+```julia
+using Term.Progress
+
+pbar = ProgressBar(; columns=:default)
+job = addjob!(pbar; N=10, description="Work")
+```
+
+For column presets and custom columns, open:
+
+- `references/progress-columns.md`
+
+### Interactive Apps
+
+```julia
+using Term.LiveWidgets
+
+app = App(TextWidget("Hello"; as_panel=true))
+play(app)
+```
+
+Open these only when needed:
+
+- `references/app-examples.md`
+- `references/widget-api.md`
+
+## Notes
+
+- Use `frame(app)` to preview a widget layout without entering the interactive loop.
+- Keep `SKILL.md` small. Read the topic-specific reference file instead of loading
+  everything at once.
+- For package workflows and tests around Term.jl code, see `julia-package-dev`
+  and `julia-tests`.
+
