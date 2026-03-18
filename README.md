@@ -9,9 +9,7 @@ A collection of Claude Code skills for Julia package development, following mode
 | Skill | Description |
 |-------|-------------|
 | [julia-package-init](julia-package-init/) | Create new Julia packages with modern infrastructure |
-| [julia-package-dev](julia-package-dev/) | Work with packages in development mode |
-| [julia-multipackage](julia-multipackage/) | Develop multiple inter-related packages together |
-| [julia-pkgextension](julia-pkgextension/) | Build package extensions (weak dependencies) |
+| [julia-package-dev](julia-package-dev/) | Develop Julia packages, multi-package workspaces, extensions, and Pkg apps |
 
 ### Documentation
 
@@ -36,9 +34,7 @@ A collection of Claude Code skills for Julia package development, following mode
 | Skill | Description |
 |-------|-------------|
 | [julia-perf](julia-perf/) | Optimize Julia code for performance |
-| [julia-bench-quick](julia-bench-quick/) | Quick impromptu benchmarks with @btime/@b |
-| [julia-bench-write](julia-bench-write/) | Write benchmark suites with BenchmarkTools.jl |
-| [julia-bench-run](julia-bench-run/) | Run benchmark suites and CI performance tracking |
+| [julia-bench](julia-bench/) | Quick benchmarks, benchmark suites, result comparison, and benchmark CI |
 
 ### Concurrency
 
@@ -73,7 +69,6 @@ A collection of Claude Code skills for Julia package development, following mode
 | Skill | Description |
 |-------|-------------|
 | [julia-comonicon](julia-comonicon/) | Build Julia CLI interfaces with Comonicon.jl |
-| [julia-pkg-app](julia-pkg-app/) | Build standalone apps with Pkg's native app support |
 
 ### Data Storage
 
@@ -131,27 +126,21 @@ julia-package-init
 ├── julia-docs
 └── julia-tests
 
-julia-pkgextension
-├── julia-docs (for documenting extensions)
-├── julia-tests (for extension test setup and execution)
-└── julia-makie-recipes (example use case)
+julia-package-dev
+├── julia-tests (for package test setup and execution)
+├── julia-docs (for package docs and doctests)
+├── julia-comonicon (full CLI framework)
+└── julia-makie-recipes (extension use case)
 
 julia-docs
 └── julia-tests (for running doctests in the test suite)
 
-julia-bench-write
-├── julia-bench-quick (for patterns)
-└── julia-bench-run (for execution)
+julia-bench
+└── julia-perf (performance diagnosis before or after benchmarking)
 
 julia-comonicon
+├── julia-package-init (for project bootstrapping)
 ├── julia-package-dev (for package workflows)
-├── julia-package-init (for project bootstrapping)
-└── julia-pkg-app (lightweight alternative without arg parsing)
-
-julia-pkg-app
-├── julia-comonicon (full-featured CLI alternative)
-├── julia-package-init (for project bootstrapping)
-├── julia-package-dev (for development workflow)
 └── julia-toml (for Project.toml configuration)
 
 julia-threads

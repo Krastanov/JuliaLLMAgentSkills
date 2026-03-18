@@ -52,6 +52,4 @@ julia --track-allocation=user -e 'using MyPkg; my_function(args); Profile.clear_
 ## Related Skills
 
 - `julia-jet` - JET.jl static analysis overview
-- `julia-bench-quick` - Quick ad-hoc benchmarks with @btime
-- `julia-bench-write` - Writing benchmark suites
-- `julia-bench-run` - Running benchmark suites
+- `julia-bench` - Quick benchmarks, suites, and benchmark CI

@@ -59,5 +59,4 @@ gh pr create \
 
 ## Related Skills
 
-- `julia-multipackage` - Multi-package development workflows
-- `julia-package-dev` - Package development basics
+- `julia-package-dev` - Package development basics, including multi-package workflows

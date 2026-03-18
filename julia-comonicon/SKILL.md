@@ -97,7 +97,6 @@ For concrete templates and installation/build flow, open `references/project-wor
 
 ## Related Skills
 
-- `julia-package-dev` - Julia package development workflow
 - `julia-package-init` - creating Julia packages with infrastructure
 - `julia-tests` - running package tests while developing CLI code
-- `julia-pkg-app` - lightweight Pkg-native apps (when Comonicon's features aren't needed)
+- `julia-package-dev` - also covers lightweight Pkg-native apps when Comonicon is not needed

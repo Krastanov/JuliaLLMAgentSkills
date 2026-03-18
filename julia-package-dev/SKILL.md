@@ -1,71 +1,80 @@
 ---
 name: julia-package-dev
-description: Work with Julia packages in development mode including environment setup, dependency management, and testing. Use this skill when developing Julia packages.
+description: Develop Julia packages in local environments, including multi-package workspaces, package extensions, and Pkg apps. Use when managing package environments, dependencies, package structure, and related development workflows.
 ---
 
 # Julia Package Development
 
-Work with Julia packages in development mode: environments, dependencies, and
-debugging.
+Use this skill for package-oriented Julia development: local environments,
+multi-package workspaces, extensions, and Pkg apps.
 
-## Environments vs Packages
-
-- Activate environments.
-- Develop (dev) packages into environments.
-- Avoid activating packages directly.
-
-## Development Mode Setup
+## Core Workflow
 
 ```julia
-# Create/activate a development environment
 using Pkg
+
 Pkg.activate("./dev")
-
-# Add your package in development mode
 Pkg.develop(path="./MyPackage.jl")
-
-# Now you can use it
 using MyPackage
 ```
 
-## Interactive Development with Revise.jl
+Prefer environments over mutating the global default environment.
 
-Revise.jl automatically tracks source file changes and reloads them.
+## Pick a Topic
+
+- Pkg commands and dependency management:
+  `references/pkg-commands.md`
+- Interactive debugging and exploration:
+  `references/debugging.md`
+- Multi-package development and release flow:
+  `references/multipackage-git-workflow.md`
+- Package extension patterns:
+  `references/extension-patterns.md`
+- Testing and documenting extensions:
+  `references/extension-testing.md`
+- User-facing extension error hints:
+  `references/weakdephelpers.md`
+- Pkg app scaffolding and CLI patterns:
+  `references/pkg-app-patterns.md`
+
+## Common Tasks
+
+### Interactive Development
 
 ```julia
 using Revise
 Pkg.activate("./dev")
 Pkg.develop(path="./MyPackage.jl")
 using MyPackage
-
-# Make changes to src/MyPackage.jl
-# Changes are automatically reloaded!
 ```
 
-## Logging vs Printing
+### Shared Workspace
 
-Prefer logging macros over `println`:
+```julia
+using Pkg
+Pkg.activate("quantum-dev")
+Pkg.develop(path="./QuantumInterface.jl")
+Pkg.develop(path="./QuantumSavory.jl")
+```
+
+### Logging
 
 ```julia
 @debug "Debug message"
 @info "Informational message"
-@warn "Warning message" x
+@warn "Warning message"
 @error "Error message"
 ```
 
-Enable debug messages:
-```bash
-JULIA_DEBUG=MyPackage julia -tauto --project=.
-```
+## Notes
 
-## Reference
-
-- **[Pkg Commands](references/pkg-commands.md)** - Pkg command reference
-- **[Debugging](references/debugging.md)** - Infiltrator.jl, Debugger.jl, code exploration
+- Use `julia-tests` for test execution and organization.
+- Use `julia-docs` for docs setup and doctests.
+- Use `julia-comonicon` when you need a richer CLI than Pkg apps provide.
 
 ## Related Skills
 
-- `julia-tests` - Running and writing tests
-- `julia-multipackage` - Multi-package workflows
-- `julia-pkg-app` - Building standalone CLI apps with Pkg
-- `julia-scratch` - Mutable scratch spaces for package data caches
+- `julia-tests`
+- `julia-docs`
+- `julia-scratch`
+

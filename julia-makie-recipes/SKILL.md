@@ -6,7 +6,7 @@ description: Create custom Makie plot types using recipes for reusable, themeabl
 # Julia Makie Recipes
 
 Create custom Makie plot types using recipes. This skill assumes recipes live
-in package extensions (see `julia-pkgextension`).
+in package extensions (see `julia-package-dev`).
 
 ## Type Recipes (Conversions)
 
@@ -59,5 +59,5 @@ end
 
 ## Related Skills
 
-- `julia-pkgextension` - Package extension setup
+- `julia-package-dev` - Package extension setup
 - `julia-docs` - Documenting extension functionality
