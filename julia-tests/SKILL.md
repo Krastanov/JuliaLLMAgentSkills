@@ -22,6 +22,12 @@ julia -tauto --project=test -e 'using TestItemRunner; TestItemRunner.run_tests("
 julia --project test/runtests.jl --verbose --jobs=4
 ```
 
+## Resolve First
+
+- If tests hit unreleased compat or registry lag in a multi-repo checkout,
+  `Pkg.develop(path=...)` the local sibling repos into the active env before
+  debugging the tests themselves.
+
 ## Writing Tests
 
 - Standard `@testset` organization and common support files:
@@ -30,18 +36,6 @@ julia --project test/runtests.jl --verbose --jobs=4
   `references/testitem.md`
 - Writing file-per-test suites for ParallelTestRunner.jl:
   `references/parallel-files.md`
-
-## Common Structure
-
-```text
-test/
-├── Project.toml
-├── runtests.jl
-├── test_core.jl
-├── test_aqua.jl
-├── test_jet.jl
-└── test_doctests.jl
-```
 
 ## Extra References
 
@@ -56,4 +50,3 @@ test/
 - Keep JET-specific analysis workflow under `julia-jet`.
 - Prefer one top-level testing skill and a few narrow reference files over many
   sibling skills.
-

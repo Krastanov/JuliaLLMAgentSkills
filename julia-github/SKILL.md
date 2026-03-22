@@ -8,34 +8,20 @@ description: Use Git and the GitHub CLI for version control and pull request wor
 Use Git and the GitHub CLI (`gh`) for version control and pull request workflows
 in Julia package development.
 
-## Repository Setup
+## Start Clean
 
-Keep two remotes: `upstream` (source of truth) and `origin` (your fork):
-
-```bash
-git clone https://github.com/YOUR_USERNAME/PackageName.jl.git
-cd PackageName.jl
-git remote add upstream https://github.com/OriginalOrg/PackageName.jl.git
-```
-
-## Daily Workflow
-
-### Before Starting Work
+- Keep `upstream` as source of truth and `origin` as your fork.
+- Start from the current upstream default branch (`master` or `main`), not an
+  old feature branch.
+- Pull upstream first, then create a new branch from that tip.
 
 ```bash
-git checkout master
-git pull upstream master
-```
-
-### Creating a Feature Branch
-
-```bash
-git checkout master
-git pull upstream master
+git checkout master  # or main
+git pull upstream master  # or main
 git checkout -b descriptive-branch-name
 ```
 
-### Making Changes
+## Basic Flow
 
 ```bash
 git add file1.jl file2.jl

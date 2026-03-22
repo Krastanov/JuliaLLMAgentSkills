@@ -8,45 +8,6 @@ description: Create and develop Julia packages in local environments, including 
 Use this skill for package-oriented Julia work: bootstrapping a package,
 local environments, multi-package workspaces, extensions, and Pkg apps.
 
-## Starting a Package
-
-### PkgTemplates.jl
-
-```julia
-using PkgTemplates
-
-t = Template(;
-    user = "YourGitHubUsername",
-    authors = "Your Name <your@email.com>",
-    plugins = [
-        Git(; manifest=false),
-        GitHubActions(; extra_versions=["1.10", "nightly"]),
-        Codecov(),
-        Documenter{GitHubActions}(),
-        License(; name="MIT"),
-    ],
-)
-
-t("MyPackage")
-```
-
-### Minimal Start
-
-```julia
-using Pkg
-Pkg.generate("MyPackage")
-```
-
-Then add dependencies and create `docs/` and `test/` subprojects with Pkg.
-
-### Bootstrap Checklist
-
-- [ ] Package created with `PkgTemplates` or `Pkg.generate`
-- [ ] `src/MyPackage.jl` exposes the public API
-- [ ] `test/` and `docs/` environments exist
-- [ ] CI workflows are added
-- [ ] Required secrets such as `CODECOV_TOKEN` and `DOCUMENTER_KEY` are configured
-
 ## Core Workflow
 
 ```julia
@@ -58,6 +19,13 @@ using MyPackage
 ```
 
 Prefer environments over mutating the global default environment.
+
+## Multi-Repo Rule
+
+- In a workspace with sibling repos, if compat or registry resolution blocks
+  testing, first `Pkg.develop(path=...)` the local dependency checkouts already
+  present, preferably on their current `master`/`main`.
+- Do this before chasing registry lag or editing compat blindly.
 
 ## Pick a Topic
 
@@ -78,15 +46,6 @@ Prefer environments over mutating the global default environment.
 
 ## Common Tasks
 
-### Interactive Development
-
-```julia
-using Revise
-Pkg.activate("./dev")
-Pkg.develop(path="./MyPackage.jl")
-using MyPackage
-```
-
 ### Shared Workspace
 
 ```julia
@@ -94,15 +53,6 @@ using Pkg
 Pkg.activate("quantum-dev")
 Pkg.develop(path="./QuantumInterface.jl")
 Pkg.develop(path="./QuantumSavory.jl")
-```
-
-### Logging
-
-```julia
-@debug "Debug message"
-@info "Informational message"
-@warn "Warning message"
-@error "Error message"
 ```
 
 ## Notes
