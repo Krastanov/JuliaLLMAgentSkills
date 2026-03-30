@@ -26,6 +26,13 @@ Remember: Julia executes commands directly (no implicit shell), so quoting/inter
 - Inside one shell word, array interpolation performs shell-like brace/cartesian expansion.
 - Quote shell metacharacters inside backticks when meant literally.
 
+```julia
+file = "/path/with spaces/data.csv"
+`wc -l $file`                     # safe: single argument with spaces
+flags = ["-l", "-w"]
+`wc $flags $file`                 # expands: wc -l -w /path/with spaces/data.csv
+```
+
 ## Build Pipelines Explicitly
 
 Use `pipeline` instead of shell metacharacters in command literals:
@@ -39,15 +46,24 @@ Use `&` to run producers in parallel and merge output into downstream stages.
 ## Avoid Pipeline Deadlocks
 
 When both writing and reading, actively consume output:
-- Prefer `read(out, String)` over waiting on process completion alone.
-- Split reader/writer into separate tasks when needed.
+
+```julia
+proc = open(`sort`, "r+")
+@async begin
+    for line in data
+        println(proc, line)
+    end
+    close(proc.in)
+end
+result = read(proc, String)
+```
 
 ## Configure Command Environment
 
-Use `Cmd(...)` keywords and env helpers:
-- `Cmd(cmd; dir=..., env=..., detach=..., ignorestatus=...)`
-- `setenv(cmd, pairs...)`
-- `addenv(cmd, pairs...)`
+```julia
+cmd = Cmd(`myapp --verbose`; dir="/tmp", env=["KEY=val"])
+cmd = addenv(`myapp`, "PATH" => "/usr/local/bin")
+```
 
 Use `open(cmd, mode, ...)` for stream-style interaction.
 

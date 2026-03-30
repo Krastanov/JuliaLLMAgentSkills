@@ -1,6 +1,6 @@
 ---
 name: julia-github
-description: Use Git and the GitHub CLI for version control and pull request workflows in Julia package development. Use this skill when working with Git remotes, branches, and PRs.
+description: "Create branches, push commits, open and review pull requests, manage remotes, and resolve merge conflicts using Git and the GitHub CLI (gh) in Julia package development. Use this skill when committing changes, pushing to remotes, creating or merging PRs, syncing forks, cloning repos, or resolving conflicts in .jl packages."
 ---
 
 # Julia GitHub Workflow
@@ -38,10 +38,27 @@ gh pr create \
     --repo OriginalOrg/PackageName.jl
 ```
 
+## Verify After Push
+
+After pushing, confirm CI passes and the PR is ready:
+
+```bash
+gh pr checks          # watch CI status
+gh pr view --web      # open in browser to review
+```
+
+If push fails due to upstream changes:
+
+```bash
+git fetch upstream
+git rebase upstream/master  # or main
+git push --force-with-lease origin descriptive-branch-name
+```
+
 ## Reference
 
 - **[Best Practices](references/best-practices.md)** - Commit messages, branch naming, atomic commits
-- **[Common Operations](references/common-ops.md)** - Undo, sync, stash
+- **[Common Operations](references/common-ops.md)** - Undo, sync, stash, conflict resolution
 
 ## Related Skills
 

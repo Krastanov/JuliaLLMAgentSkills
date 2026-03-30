@@ -1,12 +1,20 @@
 ---
 name: julia-tests
-description: Run and write Julia tests with Test.jl, TestItemRunner.jl, and ParallelTestRunner.jl. Use when organizing test suites, choosing a test runner, or filtering package tests.
+description: "Run and write Julia tests with Test.jl, TestItemRunner.jl, and ParallelTestRunner.jl — including writing @testitem blocks, configuring parallel execution, filtering test subsets, and debugging test failures. Use when organizing test suites, choosing a test runner, filtering package tests, or interpreting test output."
 ---
 
 # Julia Tests
 
 Use this skill for all Julia testing work. Choose the runner first, then load
 only the matching reference file.
+
+## Workflow
+
+1. **Choose a runner** (see below)
+2. **Write tests** using the matching reference
+3. **Run** with the appropriate command
+4. **Interpret output**: look for `Test Failed` lines — the file path and line number point to the failing assertion. Fix and re-run.
+5. **Verify**: all tests pass with zero failures before committing
 
 ## Choose a Runner
 

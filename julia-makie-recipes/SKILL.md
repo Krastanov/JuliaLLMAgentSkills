@@ -1,6 +1,6 @@
 ---
 name: julia-makie-recipes
-description: Create custom Makie plot types using recipes for reusable, themeable visualizations. Use this skill when implementing plot recipes in Makie extensions.
+description: "Define plot attributes, implement argument conversion, add default themes, and register custom plot types using Makie @recipe macro for reusable, themeable visualizations. Use this skill when creating custom plots in Julia, implementing Makie recipes, building plotting extensions, or converting custom types to Makie primitives."
 ---
 
 # Julia Makie Recipes
@@ -51,6 +51,7 @@ end
 - [ ] Create stub functions in the main package (with docstrings)
 - [ ] Implement the recipe and `Makie.plot!` in the extension
 - [ ] Test with CairoMakie and GLMakie
+- [ ] Verify: `using CairoMakie, MyPkg; circuitplot(test_data)` renders without errors
 
 ## Reference
 
