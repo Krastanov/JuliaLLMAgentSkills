@@ -50,12 +50,20 @@ Pkg.why("PackageName")       # Show dependency chain
 Pkg.gc()                     # Remove unused packages
 ```
 
+Old `Manifest.toml` files in the package root, `test/`, `docs/`, or custom
+subprojects can pin missing path dependencies or obsolete resolutions. Inspect
+the manifest for the environment you are actually using before assuming compat
+or source code is broken.
+
 ### Clean Slate
 
 ```julia
 rm("Manifest.toml")
 Pkg.instantiate()
 ```
+
+Apply the clean-slate step to the specific stale environment you are repairing,
+not blindly to every subproject.
 
 ## Working with Extensions
 

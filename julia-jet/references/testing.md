@@ -1,5 +1,15 @@
 # Testing with JET
 
+## Preferred Invocation
+
+For package-integrated JET tests, prefer
+`Pkg.test("MyPackage"; test_args=["jet"])`. That route lets Pkg build the test
+environment before the JET file runs and avoids many stale-manifest problems.
+
+If JET behaves differently across machines or only in CI, inspect
+`Manifest.toml` files in the package root, `test/`, and any dedicated JET
+subproject before treating it as a real JET regression.
+
 ## Package-Level Test Pattern
 
 Use `report_package` in a `@testset` with a threshold test
@@ -90,21 +100,24 @@ end
 ## Conditional JET Loading (Required Pattern)
 
 **IMPORTANT**: JET depends on Julia compiler internals and frequently breaks on
-nightly/pre-release Julia versions. **Never add JET to `test/Project.toml`
-directly.** Instead, add it conditionally in `test/runtests.jl`:
+nightly/pre-release Julia versions. If JET should not live in the main test
+environment, prefer a dedicated test subproject that is activated from
+`test/runtests.jl`, and invoke that route through `Pkg.test(...; test_args=["jet"])`:
 
 ```julia
-if get(ENV, "JET_TEST", "") == "true"
+if ARGS == ["jet"]
     using Pkg
-    Pkg.add("JET")
+    Pkg.activate(joinpath(@__DIR__, "projects", "jet"))
+    Pkg.instantiate()
     include("test_jet.jl")
 else
-    @info "Skipping JET tests -- must be explicitly enabled."
+    include("test_main.jl")
 end
 ```
 
 ### Key Points
 
-1. **Do NOT list JET in `test/Project.toml`** — causes resolution failures on Julia nightly
-2. **Use `Pkg.add("JET")` conditionally** — only when `JET_TEST=true`
-3. **When `JET_TEST` is true, run ONLY JET tests** — avoid running the full suite alongside JET
+1. **Prefer `Pkg.test(...; test_args=["jet"])`** — let Pkg manage the test env first
+2. **Use a dedicated JET subproject when needed** — avoid mutating the active test env ad hoc
+3. **Run only JET tests on the JET route** — avoid mixing the full suite with JET
+4. **Check stale manifests early** — old manifests in package, `test/`, or JET subprojects can cause fake regressions

@@ -2,6 +2,13 @@
 
 Use this reference for the default Julia test workflow with `Test.jl`.
 
+Prefer `Pkg.test(...)` even when working inside the package checkout. It
+activates the right test environment and is much less sensitive to stale
+`Manifest.toml` files than running `test/runtests.jl` directly.
+
+If resolution or loading looks wrong, inspect package-root, `test/`, and
+subproject manifests before debugging source code.
+
 ## Quick Commands
 
 ```bash
@@ -37,4 +44,3 @@ Pkg.develop(path=pwd())
   `references/conditional.md`
 - For Aqua, JET, doctests, and shared test helpers:
   `references/standard-tests.md`
-

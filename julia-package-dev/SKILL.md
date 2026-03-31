@@ -20,6 +20,12 @@ using MyPackage
 
 Prefer environments over mutating the global default environment.
 
+- Prefer `Pkg.test(...)` over directly executing `test/runtests.jl` when
+  validating a package checkout.
+- If dependency resolution behaves impossibly, inspect stale `Manifest.toml`
+  files in the package root, `test/`, `docs/`, and custom subprojects before
+  editing compat or source code.
+
 ## Multi-Repo Rule
 
 - In a workspace with sibling repos, if compat or registry resolution blocks

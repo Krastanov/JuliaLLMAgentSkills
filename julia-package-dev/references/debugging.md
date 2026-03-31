@@ -48,3 +48,8 @@ versioninfo()              # System info
 # Run all tests
 julia -tauto --project=. -e 'using Pkg; Pkg.test("PackageName")'
 ```
+
+Prefer `Pkg.test(...)` over direct `test/runtests.jl` execution unless you are
+debugging the test router itself. If the test environment behaves strangely,
+check for stale `Manifest.toml` files in the package root, `test/`, and any
+subprojects first.

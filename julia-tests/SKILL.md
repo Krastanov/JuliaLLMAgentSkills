@@ -18,9 +18,18 @@ only the matching reference file.
 
 ```bash
 julia -tauto --project=. -e 'using Pkg; Pkg.test()'
-julia -tauto --project=test -e 'using TestItemRunner; TestItemRunner.run_tests("test")'
-julia --project test/runtests.jl --verbose --jobs=4
+julia -tauto --project=. -e 'using Pkg; Pkg.test(; test_args=["integration"])'
+julia -tauto --project=. -e 'using Pkg; Pkg.test(; test_args=["--verbose", "--jobs=4"])'
 ```
+
+## Default Rule
+
+- Prefer `Pkg.test(...)` over directly executing `test/runtests.jl`; `Pkg.test`
+  activates the intended test environment and usually handles manifest updates
+  more reliably.
+- If tests fail in ways that do not match the current source, inspect checked-in
+  `Manifest.toml` files in the package root, `test/`, and custom test
+  subprojects. Stale manifests or broken path pins often cause fake failures.
 
 ## Resolve First
 
