@@ -50,6 +50,8 @@ julia -tauto --project=. -e 'using Pkg; Pkg.test(; test_args=["--verbose", "--jo
 
 - Conditional loading and environment-based test selection:
   `references/conditional.md`
+- Local code coverage checks and reports with LocalCoverage.jl:
+  `references/localcoverage.md`
 - Advanced ParallelTestRunner.jl setup:
   `references/parallel-advanced.md`
 
