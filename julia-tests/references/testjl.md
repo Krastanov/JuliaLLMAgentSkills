@@ -2,19 +2,25 @@
 
 Use this reference for the default Julia test workflow with `Test.jl`.
 
-Prefer `Pkg.test(...)` even when working inside the package checkout. It
-activates the right test environment and is much less sensitive to stale
-`Manifest.toml` files than running `test/runtests.jl` directly.
+Prefer `Pkg.test(...)` even when working inside the package checkout. It should
+be the default package-validation path, and it is much less sensitive to stale
+environment state than running `test/runtests.jl` directly.
 
-If resolution or loading looks wrong, inspect package-root, `test/`, and
-subproject manifests before debugging source code.
+Set the eager registry preference before `Pkg` operations in this workspace:
+`JULIA_PKG_SERVER_REGISTRY_PREFERENCE=eager` in the shell or
+`ENV["JULIA_PKG_SERVER_REGISTRY_PREFERENCE"] = "eager"` in Julia.
+
+If resolution or loading looks wrong, do not inspect `Manifest.toml`
+directly. Run `Pkg.update()` and `Pkg.resolve()` in the relevant environment
+first. If recurrent issues remain, delete the relevant `Manifest.toml` file and
+regenerate it with `Pkg.instantiate()`.
 
 ## Quick Commands
 
 ```bash
 julia --project=. -e 'using Pkg; Pkg.test()'
 julia -tauto --project=. -e 'using Pkg; Pkg.test()'
-julia --project=. -e 'using Pkg; Pkg.test(test_args=`integration`)'
+julia --project=. -e 'using Pkg; Pkg.test(; test_args=["integration"])'
 ```
 
 ## Minimal `runtests.jl`

@@ -19,8 +19,13 @@ versions often break JET because it depends on compiler internals.
   the package's documented JET arguments.
 - Avoid direct `test/runtests.jl` execution unless you are debugging the test
   router or worker behavior.
-- If a JET failure appears after dependency churn, inspect stale
-  `Manifest.toml` files in the package root, `test/`, and JET subprojects
+- Set `JULIA_PKG_SERVER_REGISTRY_PREFERENCE=eager` or
+  `ENV["JULIA_PKG_SERVER_REGISTRY_PREFERENCE"] = "eager"` before `Pkg`
+  operations in this workspace.
+- Never read or edit `Manifest.toml` directly. If a JET failure appears after
+  dependency churn, run `Pkg.update()` and `Pkg.resolve()` in the relevant
+  package and JET environments first. If recurrent issues remain, delete the
+  relevant `Manifest.toml` file and regenerate it with `Pkg.instantiate()`
   before blaming the analyzed code.
 
 ## Choose a Mode

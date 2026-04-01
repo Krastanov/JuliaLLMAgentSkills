@@ -9,19 +9,19 @@ parallel worker processes.
   `julia --project test/runtests.jl ...` invocations.
 - Use direct `runtests.jl` execution mainly when debugging the runner itself,
   worker init code, or CLI parsing.
-- If workers fail unexpectedly, inspect `Manifest.toml` files in the package
-  root, `test/`, and test subprojects. Stale manifests often show up as
-  worker-only failures.
 
 ## Preferred Commands
 
 ```julia
 using Pkg
-Pkg.test("MyPackage"; test_args=`--verbose --jobs=4`)
-Pkg.test("MyPackage"; test_args=`integration`)
+Pkg.test("MyPackage"; test_args=["--verbose", "--jobs=4"])
+Pkg.test("MyPackage"; test_args=["integration"])
 ```
 
 ## Direct Runner Debugging
+
+Use these commands only when debugging the runner itself. Do not use them as
+the normal way to validate a package checkout.
 
 ```bash
 julia --project test/runtests.jl

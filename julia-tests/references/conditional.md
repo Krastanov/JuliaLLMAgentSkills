@@ -2,8 +2,8 @@
 
 Prefer reaching these branches through `Pkg.test(...)` or CI rather than by
 calling `test/runtests.jl` directly. If conditional dependencies live in their
-own subproject, activate and instantiate that subproject instead of trusting an
-old manifest.
+own subproject, activate and instantiate that subproject instead of trusting
+stale environment state.
 
 ## Environment-Based Dependencies
 

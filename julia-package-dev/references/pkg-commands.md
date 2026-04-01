@@ -3,6 +3,7 @@
 ## Environment Management
 
 ```julia
+ENV["JULIA_PKG_SERVER_REGISTRY_PREFERENCE"] = "eager"
 using Pkg
 
 Pkg.activate(".")                    # Current directory
@@ -16,6 +17,17 @@ Pkg.update("SpecificPackage")        # Single package
 
 Pkg.status()                         # Show installed
 ```
+
+Set the eager registry preference before package operations in this workspace.
+Without it, just-registered package versions may be invisible locally and cause
+false resolution failures.
+
+## Package File Rules
+
+- Never read or edit `Manifest.toml` directly. Treat it as generated state
+  managed by `Pkg`.
+- Read `Project.toml` when needed, but update dependencies and compat only
+  through `Pkg` APIs.
 
 ## Adding Dependencies
 
@@ -50,20 +62,24 @@ Pkg.why("PackageName")       # Show dependency chain
 Pkg.gc()                     # Remove unused packages
 ```
 
-Old `Manifest.toml` files in the package root, `test/`, `docs/`, or custom
-subprojects can pin missing path dependencies or obsolete resolutions. Inspect
-the manifest for the environment you are actually using before assuming compat
-or source code is broken.
+If package state still looks impossible after `Pkg.update()` and
+`Pkg.resolve()`, do not inspect or patch `Manifest.toml`. Delete the manifest
+for the specific environment you are repairing and regenerate it.
 
 ### Clean Slate
 
 ```julia
-rm("Manifest.toml")
+Pkg.activate(".")
+rm("Manifest.toml"; force=true)
+Pkg.instantiate()
+
+Pkg.activate("test")
+rm("test/Manifest.toml"; force=true)
 Pkg.instantiate()
 ```
 
-Apply the clean-slate step to the specific stale environment you are repairing,
-not blindly to every subproject.
+Apply the clean-slate step only to the stale environment you are repairing, not
+blindly to every subproject.
 
 ## Working with Extensions
 
@@ -79,6 +95,7 @@ const MyPackageExt = Base.get_extension(MyPackage, :MyPackageSomeDepExt)
 ## Multi-Package Development
 
 ```julia
+using Pkg
 Pkg.activate("./dev")
 Pkg.develop(path="./QuantumOptics.jl")
 Pkg.develop(path="./QuantumClifford.jl")
@@ -90,6 +107,7 @@ Pkg.develop(path="./QuantumSavory.jl")
 Create subprojects with Pkg in their own environments:
 
 ```julia
+using Pkg
 Pkg.activate("docs")
 Pkg.add("Documenter")
 

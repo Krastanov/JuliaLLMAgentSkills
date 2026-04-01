@@ -6,9 +6,15 @@ For package-integrated JET tests, prefer
 `Pkg.test("MyPackage"; test_args=["jet"])`. That route lets Pkg build the test
 environment before the JET file runs and avoids many stale-manifest problems.
 
-If JET behaves differently across machines or only in CI, inspect
-`Manifest.toml` files in the package root, `test/`, and any dedicated JET
-subproject before treating it as a real JET regression.
+Set `JULIA_PKG_SERVER_REGISTRY_PREFERENCE=eager` or
+`ENV["JULIA_PKG_SERVER_REGISTRY_PREFERENCE"] = "eager"` before `Pkg`
+operations in this workspace.
+
+If JET behaves differently across machines or only in CI, do not inspect
+`Manifest.toml` directly. Run `Pkg.update()` and `Pkg.resolve()` in the
+relevant package and JET environments first. If recurrent issues remain,
+delete the relevant `Manifest.toml` file and regenerate it with
+`Pkg.instantiate()` before treating it as a real JET regression.
 
 ## Package-Level Test Pattern
 
@@ -120,4 +126,6 @@ end
 1. **Prefer `Pkg.test(...; test_args=["jet"])`** — let Pkg manage the test env first
 2. **Use a dedicated JET subproject when needed** — avoid mutating the active test env ad hoc
 3. **Run only JET tests on the JET route** — avoid mixing the full suite with JET
-4. **Check stale manifests early** — old manifests in package, `test/`, or JET subprojects can cause fake regressions
+4. **Do not inspect manifests directly** — run `Pkg.update()` and
+   `Pkg.resolve()` first, then delete and regenerate the relevant manifest if
+   recurrent environment issues remain

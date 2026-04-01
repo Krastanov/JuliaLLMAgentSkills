@@ -13,7 +13,11 @@ MyApp/
     └── runtests.jl
 ```
 
-Project.toml template:
+Create or modify package dependencies and compat through `Pkg`, not by
+hand-editing `Project.toml`. The example below is the resulting shape of a
+package app project file, not a recommendation to edit the file directly.
+
+Illustrative `Project.toml` shape:
 
 ```toml
 name = "MyApp"

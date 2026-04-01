@@ -2,6 +2,10 @@
 
 Use this reference when the package uses `@testitem` tests.
 
+Prefer the package's `Pkg.test(...)` entrypoint if the package already routes
+through `TestItemRunner`. Use direct `TestItemRunner.run_tests(...)` mainly
+when debugging item filters or the runner itself.
+
 ## CLI Commands
 
 ```bash
@@ -42,4 +46,3 @@ end
 
 - For writing filter-friendly `@testitem`s:
   `references/testitem.md`
-

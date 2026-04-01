@@ -59,3 +59,5 @@ Bump the dependency version before release as part of the standard release flow.
 3. **Test bidirectionally**: Test both dependency and dependent packages
 4. **Coordinate releases**: Plan release order for breaking changes
 5. **Document cross-package changes**: Note in PRs when changes span packages
+6. **Use `Pkg.test(...)` for validation**: Do not use direct `test/runtests.jl`
+   execution as the normal package-validation path

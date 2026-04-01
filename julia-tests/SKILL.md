@@ -25,11 +25,18 @@ julia -tauto --project=. -e 'using Pkg; Pkg.test(; test_args=["--verbose", "--jo
 ## Default Rule
 
 - Prefer `Pkg.test(...)` over directly executing `test/runtests.jl`; `Pkg.test`
-  activates the intended test environment and usually handles manifest updates
-  more reliably.
-- If tests fail in ways that do not match the current source, inspect checked-in
-  `Manifest.toml` files in the package root, `test/`, and custom test
-  subprojects. Stale manifests or broken path pins often cause fake failures.
+  activates the intended test environment and should be the default package
+  validation path.
+- Set `JULIA_PKG_SERVER_REGISTRY_PREFERENCE=eager` or
+  `ENV["JULIA_PKG_SERVER_REGISTRY_PREFERENCE"] = "eager"` before `Pkg`
+  operations in this workspace. Otherwise just-registered packages can look
+  unavailable and create false resolution failures.
+- Never read or edit `Manifest.toml` directly. If test environments look stale,
+  run `Pkg.update()` and `Pkg.resolve()` in the relevant environment first. If
+  recurrent issues remain, delete the relevant `Manifest.toml` file and
+  regenerate it with `Pkg.instantiate()`.
+- Read `Project.toml` when needed, but update dependencies and compat only
+  through `Pkg` APIs.
 
 ## Resolve First
 

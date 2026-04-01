@@ -20,11 +20,22 @@ using MyPackage
 
 Prefer environments over mutating the global default environment.
 
+- Set `ENV["JULIA_PKG_SERVER_REGISTRY_PREFERENCE"] = "eager"` before `Pkg`
+  operations in local or CI sessions in this workspace. Use this by default
+  when recent registrations may matter; otherwise just-registered packages can
+  appear to be missing and create false resolution failures.
 - Prefer `Pkg.test(...)` over directly executing `test/runtests.jl` when
-  validating a package checkout.
-- If dependency resolution behaves impossibly, inspect stale `Manifest.toml`
-  files in the package root, `test/`, `docs/`, and custom subprojects before
-  editing compat or source code.
+  validating a package checkout. Treat direct `test/runtests.jl` execution as
+  a runner-debugging path, not the default validation path.
+- Never read or edit `Manifest.toml` directly. Treat every manifest as
+  generated state owned by `Pkg`.
+- If dependency resolution behaves impossibly, run `Pkg.update()` and
+  `Pkg.resolve()` in the relevant environment first. If recurrent issues
+  remain, delete the relevant `Manifest.toml` file and regenerate it with
+  `Pkg.instantiate()`.
+- Read `Project.toml` when needed, but change dependencies and compat entries
+  only through `Pkg` APIs such as `Pkg.add`, `Pkg.develop`, `Pkg.rm`,
+  `Pkg.free`, and `Pkg.compat`.
 
 ## Multi-Repo Rule
 
