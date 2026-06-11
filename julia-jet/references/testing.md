@@ -5,6 +5,8 @@
 For package-integrated JET tests, prefer
 `Pkg.test("MyPackage"; test_args=["jet"])`. That route lets Pkg build the test
 environment before the JET file runs and avoids many stale-manifest problems.
+Keep JET in `test/Project.toml` with root `[workspace] projects = ["test"]`
+rather than adding root `[extras]`/`[targets]` entries.
 
 Set `JULIA_PKG_SERVER_REGISTRY_PREFERENCE=eager` or
 `ENV["JULIA_PKG_SERVER_REGISTRY_PREFERENCE"] = "eager"` before `Pkg`

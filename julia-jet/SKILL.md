@@ -17,6 +17,8 @@ versions often break JET because it depends on compiler internals.
 
 - Prefer package-integrated JET runs via `Pkg.test(...; test_args=["jet"])` or
   the package's documented JET arguments.
+- Keep JET as a test-only dependency in `test/Project.toml` with root
+  `[workspace] projects = ["test"]`; avoid new `[extras]`/`[targets]` entries.
 - Avoid direct `test/runtests.jl` execution unless you are debugging the test
   router or worker behavior.
 - Set `JULIA_PKG_SERVER_REGISTRY_PREFERENCE=eager` or

@@ -37,11 +37,19 @@ end
 
 ## Test Project Setup
 
+Use a nested test environment rather than root `[extras]`/`[targets]` entries.
+In the root `Project.toml`:
+
+```toml
+[workspace]
+projects = ["test"]
+```
+
 ```julia
 using Pkg
 Pkg.activate("test")
-Pkg.add(["Test", "Aqua", "Documenter"])
 Pkg.develop(path=pwd())
+Pkg.add(["Test", "Aqua", "Documenter"])
 ```
 
 ## When To Open More

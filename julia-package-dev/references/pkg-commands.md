@@ -114,3 +114,19 @@ Pkg.add("Documenter")
 Pkg.activate("benchmark")
 Pkg.add("BenchmarkTools")
 ```
+
+For test-only dependencies, prefer a nested `test/Project.toml` and make it a
+workspace member from the root `Project.toml` instead of using
+`[extras]`/`[targets]`:
+
+```toml
+[workspace]
+projects = ["test"]
+```
+
+```julia
+using Pkg
+Pkg.activate("test")
+Pkg.develop(path=pwd())
+Pkg.add(["Test", "Aqua"])
+```

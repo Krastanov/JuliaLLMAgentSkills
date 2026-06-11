@@ -27,6 +27,9 @@ Prefer environments over mutating the global default environment.
 - Prefer `Pkg.test(...)` over directly executing `test/runtests.jl` when
   validating a package checkout. Treat direct `test/runtests.jl` execution as
   a runner-debugging path, not the default validation path.
+- For test-only dependencies, use `test/Project.toml` with root
+  `[workspace] projects = ["test"]`; avoid new `[extras]`/`[targets]` test
+  declarations except for legacy compatibility.
 - Never read or edit `Manifest.toml` directly. Treat every manifest as
   generated state owned by `Pkg`.
 - If dependency resolution behaves impossibly, run `Pkg.update()` and

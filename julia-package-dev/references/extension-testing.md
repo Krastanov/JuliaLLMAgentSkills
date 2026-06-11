@@ -2,6 +2,10 @@
 
 ## Testing Extensions
 
+Put extension trigger packages needed only by tests in `test/Project.toml`, and
+add `[workspace] projects = ["test"]` to the root `Project.toml`. Avoid new
+root `[extras]`/`[targets]` entries except for legacy compatibility.
+
 ### In Test Suite
 
 ```julia

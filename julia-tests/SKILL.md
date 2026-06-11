@@ -27,6 +27,9 @@ julia -tauto --project=. -e 'using Pkg; Pkg.test(; test_args=["--verbose", "--jo
 - Prefer `Pkg.test(...)` over directly executing `test/runtests.jl`; `Pkg.test`
   activates the intended test environment and should be the default package
   validation path.
+- For test-only dependencies, use `test/Project.toml` and add
+  `[workspace] projects = ["test"]` to the root `Project.toml`. Avoid adding
+  new `[extras]`/`[targets]` test dependencies except for legacy compatibility.
 - Set `JULIA_PKG_SERVER_REGISTRY_PREFERENCE=eager` or
   `ENV["JULIA_PKG_SERVER_REGISTRY_PREFERENCE"] = "eager"` before `Pkg`
   operations in this workspace. Otherwise just-registered packages can look
