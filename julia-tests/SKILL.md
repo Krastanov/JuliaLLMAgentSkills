@@ -30,6 +30,10 @@ julia -tauto --project=. -e 'using Pkg; Pkg.test(; test_args=["--verbose", "--jo
 - For test-only dependencies, use `test/Project.toml` and add
   `[workspace] projects = ["test"]` to the root `Project.toml`. Avoid adding
   new `[extras]`/`[targets]` test dependencies except for legacy compatibility.
+- For randomized tests, add `StableRNGs` to the test environment and use
+  `StableRNG(seed)` objects passed explicitly to random APIs. Do not rely on
+  Julia's default RNG, `Random.seed!`, or `MersenneTwister` for reproducible
+  tests.
 - Set `JULIA_PKG_SERVER_REGISTRY_PREFERENCE=eager` or
   `ENV["JULIA_PKG_SERVER_REGISTRY_PREFERENCE"] = "eager"` before `Pkg`
   operations in this workspace. Otherwise just-registered packages can look

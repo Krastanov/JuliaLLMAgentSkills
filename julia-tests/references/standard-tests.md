@@ -74,10 +74,13 @@ end
 ```julia
 # test/TestUtils.jl
 module TestUtils
+    using StableRNGs
+
     export make_test_data, verify_result
 
     function make_test_data(n::Int)
-        # Create reproducible test data
+        rng = StableRNG(42)
+        return rand(rng, n)
     end
 
     function verify_result(result)
@@ -94,3 +97,7 @@ using .TestUtils
     @test verify_result(process(data))
 end
 ```
+
+Add `StableRNGs` to `test/Project.toml` for randomized fixtures. Use a local
+`StableRNG(seed)` and pass it to random APIs; do not rely on the default RNG,
+`Random.seed!`, or `MersenneTwister`.
