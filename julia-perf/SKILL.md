@@ -47,6 +47,7 @@ julia --track-allocation=user -e 'using MyPkg; my_function(args); Profile.clear_
 - **[Structs & Dispatch](references/structs-dispatch.md)** — Concrete fields, parametric types, Val
 - **[Memory & Arrays](references/memory-arrays.md)** — Pre-allocation, views, column-major, broadcasting
 - **[Annotations & Tweaks](references/annotations-tweaks.md)** — @inbounds, @fastmath, @simd, misc tips
+- **[Fast Loop Libraries](references/fast-loop-libraries.md)** — LoopVectorization, FastBroadcast, and Strided
 - **[Profiling & Diagnosis](references/profiling.md)** — @code_warntype, profiling, allocation tracking
 
 ## Related Skills
