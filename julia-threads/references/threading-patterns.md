@@ -16,13 +16,18 @@ GC thread configuration:
 
 ## Data Parallel Loops
 
-Use `Threads.@threads` on loop iteration spaces:
+Use `Threads.@threads [schedule]` on loop iteration spaces:
 
 ```julia
 Threads.@threads for i in eachindex(a)
     a[i] = f(a[i])
 end
 ```
+
+### Scheduling Options
+- **`:dynamic` (default)**: Distributes iterations dynamically to available worker threads. Each task processes contiguous regions. This is typically the most efficient option for uniform workloads.
+- **`:greedy` (Julia 1.11+)**: Spawns up to `threadpoolsize()` tasks, each greedily taking the next value from the iterator as soon as they finish the previous one. Excellent for workloads where individual iterations have highly non-uniform runtimes or when the iterator only supports `iterate` (no indexing).
+- **`:static`**: Creates exactly one task per thread and divides the iterations equally among them. Note that `threadid()` is constant within an iteration. *Warning*: Discouraged in library functions as it cannot be nested and throws an error if called from a thread other than 1.
 
 `@threads` does not do reductions automatically; implement reduction safely with chunk-local state and final aggregation.
 
