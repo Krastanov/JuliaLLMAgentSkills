@@ -28,9 +28,14 @@ Use threadpools for responsiveness and interactive tasks.
 
 ## Pick the Execution Primitive
 
-- Use `Threads.@threads` for parallel loops over iteration spaces.
+- Use `Threads.@threads [schedule]` for parallel loops over iteration spaces.
+  - `:dynamic` (default): Distributes chunks dynamically. Best for uniform workloads.
+  - `:greedy` (Julia 1.11+): Tasks greedily take the next value. Excellent for non-uniform workloads and non-indexable iterators.
+  - `:static`: Divides iterations equally with exactly one task per thread. Discouraged in library code as it cannot be nested or called outside thread 1.
 - Use `Threads.@spawn` for task-based parallel decomposition.
 - Use `@spawn :interactive ...` for latency-sensitive tasks.
+- Use `Polyester.@batch` for lightweight multithreaded loops with significantly lower task-spawning overhead than `@threads`, making it ideal for tight loops.
+- Leverage ecosystem packages built on Polyester for low-overhead multithreading: `Strided.jl` (multithreaded array views), `FastBroadcast.jl` (`@.. thread=true` for non-allocating parallel broadcast), and `LoopVectorization.jl` (`@tturbo` for multithreaded SIMD vectorization).
 
 For reduction-style work, avoid shared mutable accumulators; split work into independent chunks and combine results after `fetch`.
 
@@ -41,6 +46,10 @@ Treat race freedom as a hard requirement:
 - Prefer `Base.Lockable` to bind lock + protected object.
 - Use `Threads.Atomic` / `atomic_*` for primitive shared counters and similar patterns.
 - Use per-field atomics (`@atomic`, `@atomicswap`, `@atomicreplace`, `@atomiconce`) when field-level ordering is required.
+
+## Numeric Libraries (BLAS, FFTW, MKL)
+
+When mixing Julia's native multithreading with external threaded libraries, you must manually manage thread counts to avoid **oversubscription**. If calling these libraries inside a natively threaded region, set their thread count to `1` (e.g., `BLAS.set_num_threads(1)`).
 
 ## Handle Migration and Runtime Caveats
 
@@ -53,6 +62,8 @@ Treat race freedom as a hard requirement:
 ## Reference
 
 - `references/threading-patterns.md` - thread setup, safety, and synchronization patterns
+- `references/polyester.md` - lightweight threading with Polyester.jl and related ecosystem packages
+- `references/numeric-libraries.md` - managing thread counts in BLAS, MKL, and FFTW
 
 ## Related Skills
 

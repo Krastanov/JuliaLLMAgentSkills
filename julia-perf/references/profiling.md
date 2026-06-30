@@ -2,6 +2,11 @@
 
 Source: https://docs.julialang.org/en/v1/manual/performance-tips/
 
+Agents cannot use interactive viewers, GUI visualizers (ProfileView, PProf), or
+REPL displays. Always export profile data to flat `.txt` files (`format=:flat`,
+wide `displaysize`) or parse `Profile.fetch()` / `Profile.Allocs.fetch()`
+programmatically.
+
 ## Step-by-Step Diagnosis
 
 ### 1. Benchmark with @time / @btime
@@ -43,42 +48,87 @@ Common causes of instability:
 | Struct field is abstract | Parameterize the struct |
 | Captured closure variable | Use `let` block or type annotation |
 
-### 3. Profile Execution Time
+### 3. CPU Sampling Profiler (`Profile.@profile`)
+
+Identifies the most time-consuming operations in compute-bound code. Export a
+flat, tabular summary to a file for parsing:
 
 ```julia
 using Profile
 
-@profile my_function(args)
-Profile.print(noisefloor=2.0)  # suppress noise
+my_function(args)         # 1. force compilation first
+Profile.clear()           # 2. clear stale samples
 
-# Visual profilers
-using ProfileView
-@profview my_function(args)
+@profile my_function(args)  # 3. collect
 
-# Flame graph
-using PProf
-@profile my_function(args)
-pprof()
+# 4. export flat table — wide displaysize prevents truncation
+open("profile_results.txt", "w") do io
+    Profile.print(IOContext(io, :displaysize => (24, 1000)), format=:flat)
+end
 ```
 
-### 4. Track Allocations
+Then read `profile_results.txt` and find the functions with the highest sample
+counts.
 
-```bash
-julia --track-allocation=user script.jl
-```
+**Hierarchical (JSON) export.** For a structured call tree instead of a flat
+list, build a `FlameGraphs.flamegraph()`, map its nodes into plain `Dict`s, and
+write them with `JSON.json(dict)` to a file for programmatic analysis.
+
+### 4. Wall-time Profiler (`Profile.@profile_walltime`)
+
+Samples all tasks regardless of scheduling state. Use it for IO-heavy work or
+to diagnose contention on synchronization primitives (tasks waiting on
+`Channel`s or locks).
 
 ```julia
-# In script.jl:
-using MyPackage
-my_function(args)                # warm up (compile)
-Profile.clear_malloc_data()      # reset counters
-my_function(args)                # measure
+using Profile
+
+my_function(args)         # force compilation
+Profile.clear()
+
+@profile_walltime my_function(args)
+
+open("walltime_profile_results.txt", "w") do io
+    Profile.print(IOContext(io, :displaysize => (24, 1000)), format=:flat)
+end
 ```
 
-This produces `.mem` files alongside source files showing bytes allocated per
-line.
+Extremely short-lived tasks may appear as `failed_to_sample_task_fun` or
+`failed_to_stop_thread_fun`.
 
-### 5. Automated Analysis with JET.jl
+### 5. Track Allocations
+
+The allocation profiler records the stack trace and type of each allocation and
+returns natively structured data:
+
+```julia
+using Profile
+
+my_function(args)         # force compilation
+Profile.Allocs.clear()
+
+# sample_rate: 0.01 = 1%, 1.0 = every allocation. Aim for 1k–10k samples.
+Profile.Allocs.@profile sample_rate=0.01 my_function(args)
+
+prof = Profile.Allocs.fetch()
+sort!(prof.allocs, by = a -> a.size, rev = true)
+
+open("allocation_results.txt", "w") do io
+    for alloc in prof.allocs[1:min(10, end)]
+        println(io, "Size: $(alloc.size), Type: $(alloc.type)")
+        # alloc.stacktrace holds the frames if needed
+    end
+end
+```
+
+Samples are drawn uniformly across allocations (not weighted by size) unless
+`sample_rate = 1`. For a coarse view, `GC.enable_logging(true)` logs GC events
+to `stderr`. Line-level data is also available via
+`julia --track-allocation=user script.jl`, which writes `.mem` files next to
+each source file (warm up once, then `Profile.clear_malloc_data()` before the
+measured call).
+
+### 6. Automated Analysis with JET.jl
 
 ```julia
 using JET
@@ -95,7 +145,7 @@ errors without running the code.
 Run these in order on any slow function:
 
 ```julia
-using BenchmarkTools, JET
+using BenchmarkTools, JET, Profile
 
 # 1. How slow is it?
 @btime target_function($args)
@@ -106,8 +156,12 @@ using BenchmarkTools, JET
 # 3. Automated check
 @report_opt target_function(args)
 
-# 4. Where is time spent?
-@profview target_function(args)   # requires ProfileView
+# 4. Where is time spent? (export to file, then read it)
+target_function(args); Profile.clear()
+@profile target_function(args)
+open("profile_results.txt", "w") do io
+    Profile.print(IOContext(io, :displaysize => (24, 1000)), format=:flat)
+end
 ```
 
 ## Common Patterns and Fixes
@@ -171,3 +225,13 @@ function process()
     sum(data::Vector{Float64})
 end
 ```
+
+## General Best Practices
+
+1. **Force JIT compilation** — run the function once before profiling, or the
+   profile captures the compiler instead of the target code.
+2. **Clear buffers** — `Profile.clear()` / `Profile.Allocs.clear()` before each
+   collection to avoid merging with stale data.
+3. **Export, don't display** — never use interactive viewers, GUI visualizers,
+   or REPL prints. Write wide `.txt` files (`format=:flat`), parse
+   `fetch()` results directly, or export JSON.
