@@ -1,0 +1,4 @@
+interface:
+  display_name: "Julia Performance"
+  short_description: "Measure, profile, and optimize Julia code"
+  default_prompt: "Use $optimize-julia-code to diagnose and improve this Julia workload."

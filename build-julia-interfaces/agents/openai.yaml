@@ -1,0 +1,4 @@
+interface:
+  display_name: "Julia Interfaces"
+  short_description: "Build Julia CLIs, terminal UIs, and Makie recipes"
+  default_prompt: "Use $build-julia-interfaces to create the simplest suitable Julia user interface."
