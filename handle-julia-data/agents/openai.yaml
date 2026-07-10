@@ -1,0 +1,4 @@
+interface:
+  display_name: "Julia Data Workflows"
+  short_description: "Read, transform, validate, and present Julia data"
+  default_prompt: "Use $handle-julia-data to build a focused, reproducible Julia data workflow."

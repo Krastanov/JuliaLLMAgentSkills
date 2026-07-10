@@ -1,0 +1,4 @@
+interface:
+  display_name: "Julia Workload Orchestration"
+  short_description: "Coordinate Julia tasks, threads, and subprocesses"
+  default_prompt: "Use $orchestrate-julia-workloads to make this Julia workload concurrent and reliable."

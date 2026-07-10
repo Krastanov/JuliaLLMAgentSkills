@@ -1,0 +1,4 @@
+interface:
+  display_name: "Julia Package Development"
+  short_description: "Build, test, document, and maintain Julia packages"
+  default_prompt: "Use $develop-julia-packages to improve this Julia package and validate the changes."
