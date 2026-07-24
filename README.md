@@ -1,8 +1,8 @@
-# Julia Agent Skills
+# Agent Skills
 
-Five task-oriented skills for Julia work. Each `SKILL.md` is a small router;
-details and examples live in references that are loaded only for the current
-task.
+Six task-oriented skills: five for Julia work and one for agent-facing
+repository documentation. Each `SKILL.md` is a small router; details and
+examples live in references that are loaded only for the current task.
 
 | Skill | Scope |
 | --- | --- |
@@ -11,6 +11,7 @@ task.
 | [`orchestrate-julia-workloads`](orchestrate-julia-workloads/) | Tasks, channels, threads, synchronization, native-library thread control, and subprocesses |
 | [`handle-julia-data`](handle-julia-data/) | DataFrames/Tables workflows, delimited data, TOML/YAML configuration, and table reports |
 | [`build-julia-interfaces`](build-julia-interfaces/) | Scripts, Pkg apps, Comonicon CLIs, Term output/TUIs, and Makie recipes |
+| [`document-repository-v-model`](document-repository-v-model/) | Progressive repository guidance, structured V-model specifications, traceability, review, and compaction |
 
 ## Design
 
