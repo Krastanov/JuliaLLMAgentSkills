@@ -1,77 +1,77 @@
 # Discovery and Interviews
 
-Use this reference to establish intended behavior for a new project or recover it from
-an existing repository. Keep interviews short and evidence-led.
-
-## Contents
-
-- [New projects](#new-projects)
-- [Existing projects](#existing-projects)
-- [Confidence and baseline rules](#confidence-and-baseline-rules)
+Use this reference to turn a rough new-project prompt into an implementation-ready
+design or to compare an existing codebase with developer-confirmed goals. Keep interviews
+short, concrete, and iterative.
 
 ## New projects
 
-Interview and draft in rounds. After each round, summarize the proposed records,
-uncertainties, and exclusions for developer confirmation.
+Interview before writing code. After each round, summarize proposed requirements,
+uncertainties, and exclusions for confirmation.
 
-### Round 1: repository and intent
+### Round 1: purpose and boundary
 
-Ask only enough to establish:
+Establish:
 
-- Repository and independently released product boundaries.
-- Stakeholders, actors, and who accepts the result.
-- Operational scenarios and intended environments.
-- Outcomes and measurable success.
+- Products, repositories, users, stakeholders, and acceptance authority.
+- Operational scenarios, intended environments, and measurable success.
 - Explicit non-goals and prohibited behavior.
-- Consequence of failure, risk, and required reviewer independence.
-- Legal, platform, compatibility, resource, or delivery constraints.
+- Failure consequences, risk, and required reviewer independence.
+- Legal, platform, compatibility, resource, and delivery constraints.
 
-Draft `STK` outcomes without implementation terminology. Obtain explicit confirmation
-before treating them as the baseline.
+Draft `STK` outcomes without implementation terminology. Do not treat them as confirmed
+until the developer approves them.
 
-### Round 2: observable system behavior
+### Round 2: observable behavior
 
-Ask about capabilities, inputs and outputs, external interfaces, quality attributes,
-error behavior, compatibility ranges, performance budgets, and recovery behavior. Draft
-`SYS` records and `SYSV` intent together. Resolve vague adjectives with examples or
-thresholds.
+Ask about capabilities, inputs, outputs, external interfaces, quality attributes, error
+behavior, compatibility, performance budgets, and recovery. Draft `SYS` requirements
+and `SYSV` actions together. Replace vague adjectives with examples or thresholds.
 
-### Round 3: logical contracts
+### Round 3: independent implementation boundaries
 
-Derive `SUB` responsibilities and boundary semantics, then only the non-obvious `CMP`
-contracts needed for correct implementation and evidence. Ask the developer when a
-choice changes observable behavior or represents a genuine tradeoff. Do not ask them to
-invent details that repository conventions can settle safely.
+Derive `SUB` responsibilities and interface semantics, then the non-obvious `CMP`
+contracts needed for implementation and verification. Make ownership, inputs, outputs,
+state transitions, errors, dependencies, and integration order explicit enough that
+several agents can work on nonoverlapping parts without guessing shared contracts.
 
-### Round 4: implementation context and evidence
+Ask the developer when a choice changes observable behavior or represents a genuine
+tradeoff. Let repository conventions settle low-impact implementation details.
 
-Separate normative specification and router-local rules before capturing architecture,
-packages, tools, workflows, and rationale in `.agents/context/`. Assign each retained
-context leaf exactly one dominant need: `Guided learning`, `Task playbook`, `Reference`,
-or `Explanation`. Create only leaves that answer an evidenced agent retrieval need.
-Map all right-side actions, unresolved issues, environments, and durable evidence
-locations. Add source routers only after actual code roots or meaningful boundaries
-exist.
+### Round 4: working context and evidence
 
-Finish by showing the intended specification, unresolved decisions, and planned evidence
-to the developer for approval.
+Capture architecture choices, packages, tools, commands, workflows, and rationale in
+`.agents/context/`. Assign each context leaf one dominant need: `Guided learning`,
+`Task playbook`, `Reference`, or `Explanation`. Create source routers only after code
+roots or meaningful boundaries exist.
 
-## Existing projects
+Map verification actions, integration checkpoints, unresolved issues, environments, and
+durable evidence locations. Show the complete temporary design and planned work split to
+the developer before implementation begins.
 
-Start with read-only discovery. Parallelize only when applicable instructions permit it.
-Use distinct lanes so conclusions can be reconciled:
+During implementation, use the V-model to coordinate agents and update durable docs as
+the repository takes shape. At completion, reconcile behavior and evidence, transfer
+brief unresolved gaps to persistent context or issues, and delete the V-model.
 
-1. Public docs, examples, manifests, release metadata, and declared compatibility.
+## Existing codebases
+
+Create a temporary V-model only for a holistic goal-versus-implementation review. For
+routine documentation maintenance, inspect the repository directly and keep the V-model
+absent.
+
+Begin a holistic review with read-only discovery. Use distinct lanes when delegation is
+permitted:
+
+1. Public docs, examples, manifests, release metadata, and compatibility promises.
 2. Source entry points, architecture, state and error boundaries, and external APIs.
 3. Tests, fixtures, CI, supported environments, runtime checks, and observed behavior.
-4. Existing `AGENTS.md`, `.agents/`, design documents, issue references, and relevant
-   history.
+4. Existing `AGENTS.md`, `.agents/context/`, design documents, issue references, and
+   relevant history.
 
-Do not change source code during a documentation-only discovery or forward test.
-Do not execute a credentialed, destructive, externally mutating, costly, or
-production-facing test merely to establish documentation evidence. Unless the developer
-has explicitly authorized a suitably isolated and reversible run, record the action as
-planned and specify the fixture, safeguards, and acceptance environment it needs.
+Do not change source code during discovery. Do not run credentialed, destructive,
+externally mutating, costly, or production-facing tests without explicit authorization
+and suitable isolation. Record unsafe actions as planned evidence with their fixtures,
+safeguards, and environment.
 
 ### Maintain an evidence ledger
 
@@ -79,81 +79,54 @@ For each candidate claim, record:
 
 | Field | Meaning |
 | --- | --- |
-| Candidate claim | The smallest behavior, intent, decision, or conflict being assessed |
+| Candidate claim | Smallest behavior, goal, decision, or conflict being assessed |
 | Evidence | Exact file, symbol, test, commit, release, or developer statement |
 | Evidence kind | Documentation, code, test, runtime, history, or interview |
 | Confidence | High, medium, or low, with a short reason |
 | Conflict | Contrary evidence or missing perspective |
-| Proposed class | Intended specification, accepted decision, defect/spec gap, obsolete behavior, or unresolved |
+| Proposed class | Intended goal, accepted decision, design defect, missing implementation, obsolete behavior, or unresolved |
 
-Code and tests are evidence of current behavior. They are not automatic proof that the
-behavior is desired. Public documentation may describe intent but still be stale. A
-developer statement can establish intent, but compare it with shipped compatibility and
-stakeholder commitments before removing behavior.
-Do not equate an export list with a stable public contract: reconcile exports, explicit
-stability/private markers, release notes, supported examples, and actual downstream use.
+Code and tests show current behavior; they do not establish that it is desired. Public
+documentation can describe intent but may be stale. Compare developer statements with
+shipped compatibility and stakeholder commitments.
 
-For CI evidence, trace each matrix value, environment variable, feature flag, tag, and
-filter through the test entry point to the selected cases. Similar job and selector
-names are not evidence that the intended shard actually runs.
-
-Before turning a candidate into a normative statement, try to falsify it. Probe empty,
-malformed, boundary, fallback, negative, and repeated-call cases in proportion to risk.
-Exercise each public entry point, default, override, and diagnostic path that can reach
-the behavior.
-Treat words such as “all,” “every,” “any,” “deterministic,” and “supported” as prompts
-for counterexamples. If known behavior contradicts a proposed universal claim, keep the
-conflict unresolved or narrow the record; draft status does not make an internally
-inconsistent statement acceptable.
-
-For filesystem deletion or other destructive state changes, also probe canonicalized
-and traversal paths, symlinks or aliases, pre-existing and stale success markers,
-partial prior runs, zero/negative/nonnumeric/overflow limits, and repeated invocations.
-State containment relative to resolved targets, not merely a configured path string.
-Treat “fail open,” “continue,” and “recover” as caller-control-flow claims unless
-evidence separately establishes remote atomicity, rollback, idempotent retry, and the
-resulting partial state.
+Trace CI matrix values, flags, tags, and filters through the actual test entry point.
+Before accepting a universal claim, probe empty, malformed, boundary, fallback,
+negative, and repeated-call cases in proportion to risk. For destructive behavior, also
+check canonical paths, traversal, aliases, stale success markers, partial prior runs,
+invalid limits, and retries.
 
 ### Interview only the gaps
 
-After discovery, ask compact questions about matters inspection cannot establish:
+Ask the developer what inspection cannot establish:
 
-- Which users and scenarios are authoritative?
-- Is a surprising behavior intentional, tolerated debt, or a defect?
-- Which compatibility promises and exclusions must remain?
-- Which conflicts should be resolved now and which remain explicit?
-- What failure consequences or acceptance thresholds drive assurance?
+- Which users, scenarios, outcomes, and exclusions are authoritative?
+- Is surprising behavior intentional, tolerated debt, a design defect, or missing work?
+- Which compatibility promises must remain?
+- Which conflicts should be resolved now?
+- What failure consequences and acceptance thresholds drive assurance?
 
-Show the exact competing evidence with each question. Avoid asking for facts already
-available in the repository.
+Show the competing evidence with each question. Convert confirmed goals into the
+temporary V-model, then compare them systematically with implementation and evidence.
 
-### Classify before moving prose
+### Classify review findings
 
-Assign each observed claim to one class:
+- **Matched:** implementation and evidence satisfy confirmed intent.
+- **Design defect:** architecture or boundary choices obstruct a confirmed goal.
+- **Missing implementation:** confirmed behavior is absent or incomplete.
+- **Unintended behavior:** implemented behavior conflicts with a confirmed goal.
+- **Verification gap:** a claim lacks objective or durable evidence.
+- **Accepted decision:** current implementation choice and rationale belong in context.
+- **Unresolved:** record the question, evidence, owner, and review trigger.
 
-- **Intended specification:** confirmed normative behavior; move or write it in the
-  V-model with objective evidence.
-- **Accepted implementation decision:** current “how” and rationale; keep it in a context
-  topic linked to the fulfilled specification.
-- **Defect or specification gap:** code and intended behavior differ; keep the mismatch
-  explicit and do not rewrite either side to hide it.
-- **Obsolete behavior:** no longer intended; remove current-state guidance and retain a
-  short retirement note only when compatibility requires one.
-- **Unresolved:** evidence conflicts or intent is unavailable; record the question,
-  evidence, owner, and review trigger.
+Complete the agreed review output or corrections, update durable docs, reduce unfinished
+items to concise current gaps, then delete the V-model and run the linter in `absent`
+mode.
 
-Preserve useful existing open/avoid criteria, source anchors, test anchors, commands, and
-local rules. Replace duplicated normative prose with canonical V-model links. After
-separating specification and router-local material, classify each retained context leaf
-as `Guided learning`, `Task playbook`, `Reference`, or `Explanation`; do not create
-empty category scaffolding.
+## Confidence rules
 
-## Confidence and baseline rules
-
-- Baseline only developer-confirmed or otherwise authoritative intended behavior.
-- Leave inferred records in `draft` status and identify their evidence.
-- Do not turn “the test currently passes” into a stakeholder outcome.
-- Do not infer that a cited test covers clauses or edge cases it never exercises.
-- Do not turn one example into a general compatibility guarantee.
-- Do not silently choose between documentation and code when they conflict.
-- Record what was not inspected and why.
+- Treat only developer-confirmed or otherwise authoritative goals as normative.
+- Do not turn a passing test into a stakeholder outcome.
+- Do not claim that evidence covers clauses or edge cases it never exercises.
+- Do not generalize one example into a compatibility guarantee.
+- Keep conflicts visible and record what was not inspected.

@@ -1,71 +1,59 @@
 # V-Model and Traceability
 
-Use this reference whenever writing, changing, or reviewing normative specification and
-verification records.
+Use this reference only while designing a new project before code or conducting a
+holistic review of an existing codebase.
 
 ## Contents
 
-- [Profile and source basis](#profile-and-source-basis)
-- [Incremental V-model](#incremental-v-model)
+- [Purpose and lifetime](#purpose-and-lifetime)
 - [Four specification layers](#four-specification-layers)
-- [Specification record format](#specification-record-format)
-- [Verification action format](#verification-action-format)
-- [Traceability rules](#traceability-rules)
+- [Specification records](#specification-records)
+- [Verification actions](#verification-actions)
+- [Traceability](#traceability)
 - [Specification versus decisions](#specification-versus-decisions)
 - [Risk tailoring](#risk-tailoring)
+- [Close the V-model](#close-the-v-model)
 
-## Profile and source basis
+## Purpose and lifetime
 
-This is a repository-neutral V-profile. It borrows useful distinctions and traceability
-practices; it does not establish compliance with NASA, FDA, ECSS, V-Modell XT, or any
-regulated lifecycle.
+Use the V-model for exactly two bounded tasks:
 
-- [NASA Systems Engineering Handbook §2.4](https://www.nasa.gov/reference/2-4-distinctions-between-product-verification-and-product-validation/)
-  distinguishes verification of compliance with requirements from validation of the
-  intended purpose in the intended environment. Preserve that distinction: `ACC`
-  actions validate stakeholder outcomes; the other right-side records verify specified
-  behavior or contracts.
-- [FDA General Principles of Software Validation](https://www.fda.gov/media/73141/download)
-  maps unit evidence to detailed design, integration evidence to high-level design, and
-  system evidence to software requirements; it also calls for objective pass/fail
-  records and traceability in both directions. Use the mapping without implying that
-  ordinary repositories are medical-device submissions.
-- [ECSS-E-ST-40C Rev.1](https://ecss.nl/standard/ecss-e-st-40c-rev-1-software-30-april-2025/)
-  emphasizes tailoring, early verification/validation planning, requirements-to-design
-  traceability, controlled evidence, and risk-scaled independence. Use only these
-  selected practices.
+- Turn a rough project prompt into a developer-confirmed design whose contracts and
+  acceptance criteria let independent agents build a coherent first version.
+- Compare a whole existing codebase with developer-confirmed goals to detect design
+  defects, missing or unintended behavior, and verification gaps.
 
-## Incremental V-model
+Store it under `.agents/v-model/` while the task is active. It may be committed on a task
+branch for coordination. Delete it when the initial implementation or holistic review
+is complete. Do not maintain it for routine feature work, releases, or later repository
+changes; persistent parallel specifications create avoidable synchronization work and
+eventually drift from the implementation.
 
-Do not run the profile as a single-pass waterfall. For each feature, defect correction,
-compatibility change, or release:
-
-1. Identify affected stakeholder outcomes and system requirements.
-2. Update logical contracts without encoding chosen file/package topology.
-3. Plan or revise right-side actions while writing the left-side records.
-4. Implement at the bottom of the V.
-5. Execute unit/inspection, integration, system, and acceptance evidence as applicable.
-6. Update current status, durable evidence, nonconformance, and regression impact.
-
-Baseline records incrementally after developer confirmation. A change to a baselined
-product gets its own mini-V and regression analysis.
+This is a repository-neutral V-profile, not a claim of NASA, FDA, ECSS, V-Modell XT, or
+regulated-lifecycle compliance. It uses the distinction between validating intended
+outcomes and verifying specified behavior, objective pass/fail records, bidirectional
+traceability, early evidence planning, tailoring, and risk-scaled independence.
 
 ## Four specification layers
 
 | Layer | Include | Exclude | Right side |
 | --- | --- | --- | --- |
-| `STK-###` stakeholder outcomes | Actors, operational scenarios, intended outcomes, success measures, explicit exclusions | Package names, file layout, algorithms | `ACC-###` operational validation and acceptance |
-| `SYS-###` system requirements | Observable capabilities, quality attributes, constraints, external boundaries, objective acceptance criteria | Internal architecture unless externally observable | `SYSV-###` black-box system verification |
-| `SUB-###` subsystem/interface contracts | Logical responsibilities, data/state/error semantics, boundary contracts | Chosen package and file topology | `INTV-###` integration, contract, and failure-path verification |
-| `CMP-###` component contracts | Non-obvious behavior, invariants, pre/postconditions, resource budgets needed to implement or verify | Exhaustive function documentation and obvious behavior | `UNITV-###` unit, property, static-analysis, or inspection evidence |
+| `STK-###` stakeholder outcomes | Actors, operational scenarios, intended outcomes, success measures, exclusions | Package names, file layout, algorithms | `ACC-###` operational validation and acceptance |
+| `SYS-###` system requirements | Observable capabilities, quality attributes, constraints, external boundaries, objective criteria | Internal architecture unless externally observable | `SYSV-###` black-box system verification |
+| `SUB-###` subsystem/interface contracts | Logical responsibilities, data, state, error, and boundary semantics | Chosen package and file topology | `INTV-###` integration and contract verification |
+| `CMP-###` component contracts | Non-obvious invariants, preconditions, postconditions, and resource budgets | Exhaustive function documentation and obvious behavior | `UNITV-###` unit, property, analysis, or inspection evidence |
 
 Parent layers are strict: `STK` has no parent; `SYS` points to `STK`; `SUB` points to
 `SYS`; `CMP` points to `SUB`. Use multiple parents when one record refines several
-concerns. Keep IDs stable when wording changes; retire rather than reuse an ID.
+concerns. Keep IDs stable during the active task and never reuse retired IDs.
 
-## Specification record format
+For initial design, make `SUB` boundaries and shared contracts precise enough to assign
+nonoverlapping implementation work. For holistic review, use every layer to compare
+confirmed intent with actual behavior and evidence.
 
-Use a level-two or deeper heading and the exact required fields:
+## Specification records
+
+Use a level-two or deeper heading and these fields:
 
 ```markdown
 ## SYS-014 — Export results without data loss
@@ -74,23 +62,22 @@ Use a level-two or deeper heading and the exact required fields:
 - **Parents:** STK-003
 - **Acceptance criterion:** Given ..., when ..., then ...
 - **Verification:** SYSV-008 (test), SYSV-011 (analysis)
-- **Origin / risk:** Customer interview; medium data-loss risk
-- **Context:** [Persistence decision](../context/persistence.md)
+- **Origin / risk:** Developer interview; medium data-loss risk
+- **Context:** [Persistence design](../context/persistence.md)
 ```
 
-Required fields are `Normative statement`, `Parents`, `Acceptance criterion`, and
-`Verification`. `Origin / risk` and `Context` are optional. Put `None` in `Parents` only
-for `STK` records. Every verification mapping includes an action ID and one method in
-parentheses: `test`, `analysis`, `inspection`, or `demonstration`.
+`Normative statement`, `Parents`, `Acceptance criterion`, and `Verification` are
+required. `Origin / risk` and `Context` are optional. Use `None` in `Parents` only for
+`STK`. Every verification mapping includes an action ID and one method in parentheses:
+`test`, `analysis`, `inspection`, or `demonstration`.
 
-Write one independently testable normative statement per record. Make the acceptance
-criterion objective enough for a future agent to decide pass or fail. Avoid vague terms
-such as “fast,” “robust,” or “user-friendly” unless a measurable threshold or scenario
-defines them.
+Write one independently testable statement per record. Make its criterion objective
+enough for an agent to decide pass or fail. Replace words such as "fast," "robust," or
+"user-friendly" with thresholds or concrete scenarios.
 
-## Verification action format
+## Verification actions
 
-Store all right-side actions in `verification.md` or its shards:
+Store right-side actions in `verification.md` or its shards:
 
 ```markdown
 ## SYSV-008 — Verify lossless result export
@@ -105,79 +92,66 @@ Store all right-side actions in `verification.md` or its shards:
 - **Nonconformance:** None
 ```
 
-Every action requires all eight fields. Use statuses consistently:
+Every action requires all eight fields. Use these statuses:
 
 | Status | Meaning |
 | --- | --- |
-| `planned` | The full action is designed but its durable test, analysis, inspection, or demonstration is not yet implemented. |
-| `implemented` | A durable action artifact exists, but current full-criterion execution evidence is absent or incomplete. |
-| `passing` | Current durable evidence demonstrates every pass-criterion clause in the named environment. |
-| `failing` | Current evidence violates at least one pass-criterion clause. |
+| `planned` | The action is designed but its durable artifact is absent. |
+| `implemented` | The artifact exists but current full-criterion evidence is incomplete. |
+| `passing` | Current durable evidence demonstrates every criterion clause in the named environment. |
+| `failing` | Current evidence violates at least one clause. |
 | `blocked` | Execution cannot proceed; name the blocker and owner or trigger. |
-| `waived` | Authorized rationale accepts the missing or failing evidence; link the approval. |
+| `waived` | An authorized rationale accepts missing or failing evidence; link approval. |
 
-A `passing` action must name durable evidence: a committed test or report, stable
-CI/release record, analysis file, or inspection record. Do not use pasted logs or a claim
-such as “tested manually” as the only evidence.
-For an `implemented` inspection action, cite a durable checklist, review record, or
-automated check; the source file being inspected is not itself the inspection artifact.
+A `passing` action must cite durable evidence. Do not use pasted logs or "tested
+manually" as the only evidence. Match procedures, criteria, and evidence clause by
+clause. Split actions when one artifact does not exercise every condition. Use fixtures
+that distinguish ordering, direction, field identity, and branch behavior.
 
-Record a failing or blocked action honestly and link its nonconformance. A waiver needs
-an explicit rationale and approval anchor. One action may cover several specifications,
-and one specification may require several actions.
+## Traceability
 
-Match the action’s procedure and pass criterion to the cited evidence clause by clause.
-If a specification contains several conditions, either exercise every condition or split
-the evidence into separate actions. Never mark an action `passing` because adjacent
-behavior is tested, because source inspection suggests it should work, or because only
-one direction or entry point is covered. Use a separate `analysis` or `inspection`
-action for source evidence and record unexercised cases as nonconformance or planned
-work.
-Choose fixtures that can distinguish the claimed outcomes. Symmetric or identical
-inputs cannot establish ordering, direction, field identity, or correct branch routing
-when a swapped implementation would produce the same result.
+Maintain bidirectional many-to-many links inside the temporary V-model:
 
-## Traceability rules
-
-Maintain bidirectional many-to-many links:
-
-- Every specification lists at least one matching right-side action.
+- Every specification lists at least one matching action.
 - Every action lists at least one covered specification.
-- The action ID appears on both sides, and the method in the specification matches the
-  action’s `Method`.
+- IDs appear on both sides and declared methods match.
 - `ACC` covers only `STK`; `SYSV` only `SYS`; `INTV` only `SUB`; `UNITV` only `CMP`.
-- Parent references point to existing records in the immediately higher layer.
-- Regular context documents link back to related specification IDs.
-- Plan verification while specifying the behavior; do not postpone all right-side
-  design until implementation is complete.
+- Parent references point to the immediately higher layer.
+- Plan verification while specifying behavior.
 
-Traceability demonstrates coverage, not truth. Review whether a test actually exercises
-the criterion and whether the criterion represents developer intent.
+Traceability demonstrates coverage, not truth. Review whether evidence exercises the
+criterion and whether the criterion represents developer intent. Persistent context may
+be linked from V-model records, but must not depend on reverse links or IDs that become
+meaningless after deletion.
 
 ## Specification versus decisions
 
-The V-model must stand alone as a behavioral contract. Keep these outside it:
+Keep these outside the V-model and in persistent context when they remain useful:
 
 - Chosen language, framework, package, file, class, or database layout.
-- Current source-file locations and named CI jobs when the normative need is an API or
-  compatibility outcome.
-- Trade studies and rejected alternatives.
-- Build-tool choices and local development conventions.
-- Rationale that explains why one implementation was selected.
+- Current source paths, CI job names, build tools, and local conventions.
+- Trade studies, rejected alternatives, architecture rationale, and workflows.
 
-Link to one relevant topic per subsystem section when background helps. If an
-implementation decision becomes an externally observable invariant, promote only that
-invariant into a `SYS`, `SUB`, or `CMP` statement. Leave the decision and rationale in
-`.agents/context/`. State a compatibility result independently of the workflow or tool
-currently used to demonstrate it.
+If an implementation choice becomes externally observable, specify only its invariant
+and objective acceptance meaning. Keep the mechanism and rationale in context. In a
+holistic review, preserve conflicts rather than rewriting goals to match code.
 
 ## Risk tailoring
 
-Record origin and risk when it changes assurance. Increase specialist review,
-environment fidelity, failure injection, evidence durability, and reviewer independence
-for safety, security, privacy, destructive operations, financial impact, hard real-time
-budgets, broad compatibility promises, or externally consumed interfaces.
+Increase specialist review, environment fidelity, failure injection, evidence
+durability, and reviewer independence for safety, security, privacy, destructive
+operations, financial impact, hard real-time budgets, compatibility promises, or public
+interfaces. Keep low-risk projects proportional: a few precise records are better than
+one record per function.
 
-Keep low-risk tiny libraries proportional: a small number of precise records is better
-than one record per function. Tailoring may reduce ceremony, never the objective
-pass/fail meaning of a retained requirement.
+## Close the V-model
+
+Before completing the task:
+
+1. Reconcile confirmed goals with implementation and evidence.
+2. Put current usage, development workflows, architecture, and decisions in durable
+   agent context.
+3. Record remaining work as concise current gaps in context or the issue tracker,
+   without V-model IDs or copied trace tables.
+4. Remove every router link to `.agents/v-model/`.
+5. Delete `.agents/v-model/` and run the linter with `--v-model absent`.

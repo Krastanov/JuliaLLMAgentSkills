@@ -11,7 +11,7 @@ examples live in references that are loaded only for the current task.
 | [`orchestrate-julia-workloads`](orchestrate-julia-workloads/) | Tasks, channels, threads, synchronization, native-library thread control, and subprocesses |
 | [`handle-julia-data`](handle-julia-data/) | DataFrames/Tables workflows, delimited data, TOML/YAML configuration, and table reports |
 | [`build-julia-interfaces`](build-julia-interfaces/) | Scripts, Pkg apps, Comonicon CLIs, Term output/TUIs, and Makie recipes |
-| [`document-repository-v-model`](document-repository-v-model/) | Progressive repository guidance, structured V-model specifications, traceability, review, and compaction |
+| [`document-repository-v-model`](document-repository-v-model/) | Durable agent guidance plus temporary V-models for initial design and holistic review |
 
 ## Design
 

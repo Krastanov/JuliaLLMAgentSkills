@@ -1,4 +1,4 @@
 interface:
   display_name: "Document Repository V-Model"
-  short_description: "Build and audit repository documentation"
-  default_prompt: "Use $document-repository-v-model to structure and validate this repository’s agent-facing documentation."
+  short_description: "Build durable docs and temporary V-models"
+  default_prompt: "Use $document-repository-v-model to design or holistically review this repository and leave durable agent documentation."

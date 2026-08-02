@@ -3,8 +3,8 @@
 - **Context need:** {{CONTEXT_NEED}}
 - **Open when:** {{OPEN_CONDITION}}
 - **Do not open when:** {{AVOID_CONDITION}}
-- **Related specification IDs:** {{SPECIFICATION_IDS}}
 - **Review when:** {{REVIEW_TRIGGER}}
+- **Known gaps:** {{KNOWN_GAPS_OR_NONE}}
 
 ## {{NEED_SPECIFIC_HEADING}}
 
