@@ -1,12 +1,14 @@
 # {{PRODUCT_NAME}} V-Model
 
 - **Profile status:** draft
+- **Task:** {{INITIAL_DESIGN_OR_HOLISTIC_REVIEW}}
 - **Product boundary:** {{PRODUCT_BOUNDARY}}
 - **Acceptance authority:** {{ACCEPTANCE_AUTHORITY}}
 - **Last reviewed:** {{REVIEW_DATE}}
 
-This profile is a repository-specific specification and evidence map. It is not a claim
-of compliance with NASA, FDA, ECSS, or V-Modell XT.
+This is a temporary specification and evidence map for the active task. Delete this
+directory after the initial implementation or holistic review is complete. It is not a
+claim of compliance with NASA, FDA, ECSS, or V-Modell XT.
 
 ## Left-side specification
 

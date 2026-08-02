@@ -34,6 +34,8 @@ WORD_RE = re.compile(r"\b[\w'-]+\b", re.UNICODE)
 PLACEHOLDER_RE = re.compile(
     r"\{\{[^{}\n]+\}\}|<[A-Z][A-Z0-9_ -]{2,}>|\b(?:TODO|TBD|FIXME|CHANGEME)\b"
 )
+VMODEL_LOCAL_PATH_RE = re.compile(r"(?:^|/)\.agents/v-model(?:/|$)")
+VMODEL_MENTION_RE = re.compile(r"\bv[- ]model\b", re.IGNORECASE)
 
 LAYER_ENTRIES = {
     "01-stakeholder-outcomes": "STK",
@@ -47,6 +49,7 @@ EXPECTED_ACTION = {"STK": "ACC", "SYS": "SYSV", "SUB": "INTV", "CMP": "UNITV"}
 EXPECTED_SPEC = {value: key for key, value in EXPECTED_ACTION.items()}
 METHODS = {"test", "analysis", "inspection", "demonstration"}
 STATUSES = {"planned", "implemented", "passing", "failing", "blocked", "waived"}
+VMODEL_STATES = {"active", "absent"}
 
 SPEC_REQUIRED_FIELDS = {
     "normative statement",
@@ -175,11 +178,9 @@ CONTEXT_METADATA_FIELDS = {
     "do not open when",
     "related specification ids",
     "review when",
+    "known gaps",
 }
 H2_RE = re.compile(r"^\s{0,3}##(?:[ \t]+|$)")
-JUSTIFIED_CONTEXT_WITHOUT_SPEC_RE = re.compile(
-    r"^none\s+—\s+\S(?:.*\S)?$", re.IGNORECASE
-)
 
 
 class InputError(Exception):
@@ -276,9 +277,17 @@ def _normalized_paragraph(block: Sequence[tuple[int, str]]) -> str | None:
 
 
 class RepositoryDocsLinter:
-    def __init__(self, repository: Path, source_roots: Sequence[Path]) -> None:
+    def __init__(
+        self,
+        repository: Path,
+        source_roots: Sequence[Path],
+        v_model_state: str,
+    ) -> None:
         self.repository = repository.resolve()
         self.source_roots = [path.resolve() for path in source_roots]
+        if v_model_state not in VMODEL_STATES:
+            raise ValueError(f"invalid V-model state: {v_model_state}")
+        self.v_model_state = v_model_state
         self.errors: list[Finding] = []
         self.warnings: list[Finding] = []
         self._finding_keys: set[tuple[str, str, str, int | None, str]] = set()
@@ -340,16 +349,23 @@ class RepositoryDocsLinter:
         self._check_required_routers()
         document_files = self._document_files()
         self._check_links(document_files)
-        self._discover_profiles()
-        self._parse_records()
-        self._validate_record_locations()
-        self._validate_records()
+        if self.v_model_state == "active":
+            self._check_vmodel_routing()
+            self._discover_profiles()
+            self._check_profile_routing()
+            self._parse_records()
+            self._check_profile_record_coverage()
+            self._validate_record_locations()
+            self._validate_records()
+        else:
+            self._check_stale_vmodel_references(self._repository_markdown_files())
         self._check_context_topics()
         self._check_sizes(document_files)
         self._check_duplicate_paragraphs(document_files)
         self._check_artifacts()
         self._check_boundary_routers()
-        self._check_baselined_placeholders()
+        if self.v_model_state == "active":
+            self._check_baselined_placeholders()
         self.errors.sort(key=lambda item: (item.path, item.line or 0, item.code))
         self.warnings.sort(key=lambda item: (item.path, item.line or 0, item.code))
 
@@ -373,19 +389,31 @@ class RepositoryDocsLinter:
                 "missing_agents_router",
                 "required .agents/index.md router is missing",
             ),
-            (
-                self.repository / ".agents" / "v-model",
-                "directory",
-                "missing_vmodel_directory",
-                "required .agents/v-model directory is missing",
-            ),
-            (
-                self.repository / ".agents" / "v-model" / "index.md",
-                "file",
-                "missing_vmodel_router",
-                "required .agents/v-model/index.md router is missing",
-            ),
         ]
+        vmodel_root = self.repository / ".agents" / "v-model"
+        if self.v_model_state == "active":
+            required.extend(
+                [
+                    (
+                        vmodel_root,
+                        "directory",
+                        "missing_vmodel_directory",
+                        "active mode requires .agents/v-model",
+                    ),
+                    (
+                        vmodel_root / "index.md",
+                        "file",
+                        "missing_vmodel_router",
+                        "active mode requires .agents/v-model/index.md",
+                    ),
+                ]
+            )
+        elif vmodel_root.exists() or vmodel_root.is_symlink():
+            self.error(
+                "unexpected_vmodel",
+                vmodel_root,
+                "absent mode requires .agents/v-model to be deleted",
+            )
         for path, expected_type, code, message in required:
             valid = path.is_file() if expected_type == "file" else path.is_dir()
             if not valid:
@@ -408,12 +436,133 @@ class RepositoryDocsLinter:
         agents_directory = self.repository / ".agents"
         if agents_directory.is_dir():
             try:
+                vmodel_root = agents_directory / "v-model"
                 files.update(
-                    path for path in agents_directory.rglob("*.md") if path.is_file()
+                    path
+                    for path in agents_directory.rglob("*.md")
+                    if path.is_file()
+                    and not (
+                        self.v_model_state == "absent"
+                        and (path == vmodel_root or vmodel_root in path.parents)
+                    )
                 )
             except OSError as exc:
                 raise InputError(f"cannot inspect {agents_directory}: {exc}") from exc
         return sorted(files)
+
+    def _repository_markdown_files(self) -> list[Path]:
+        files: list[Path] = []
+        vmodel_root = self.repository / ".agents" / "v-model"
+        for directory, names, filenames in os.walk(self.repository, followlinks=False):
+            names[:] = [name for name in names if name not in SKIPPED_DIRS]
+            path = Path(directory)
+            if self.v_model_state == "absent" and (
+                path == vmodel_root or vmodel_root in path.parents
+            ):
+                names[:] = []
+                continue
+            files.extend(
+                path / filename
+                for filename in filenames
+                if Path(filename).suffix.lower() == ".md"
+            )
+        return sorted(files)
+
+    def _check_stale_vmodel_references(self, files: Iterable[Path]) -> None:
+        external_schemes = {"data", "ftp", "http", "https", "mailto", "tel"}
+        agents_root = (self.repository / ".agents").resolve()
+        vmodel_root = (self.repository / ".agents" / "v-model").resolve()
+        for path in files:
+            lines = _visible_lines(self._read(path))
+            has_stale_link = False
+            stale_link_lines: set[int] = set()
+            for line_number, line in enumerate(lines, 1):
+                destinations = [match.group(1) for match in LINK_RE.finditer(line)]
+                reference_match = REFERENCE_LINK_RE.match(line)
+                if reference_match:
+                    destinations.append(reference_match.group(1))
+                stale_destinations: set[str] = set()
+                for raw_destination in destinations:
+                    raw = raw_destination.strip()
+                    if raw.startswith("<") and raw.endswith(">"):
+                        destination = raw[1:-1].strip()
+                    else:
+                        destination = raw.split(maxsplit=1)[0]
+                    try:
+                        parsed = urlsplit(destination)
+                    except ValueError:
+                        continue
+                    if parsed.scheme.lower() in external_schemes or parsed.netloc:
+                        continue
+                    local_path = unquote(parsed.path).replace("\\", "/")
+                    if local_path.startswith("/"):
+                        candidate = self.repository / local_path.lstrip("/")
+                    else:
+                        candidate = path.parent / local_path
+                    if VMODEL_LOCAL_PATH_RE.search(local_path) or _is_within(
+                        candidate.resolve(strict=False), vmodel_root
+                    ):
+                        stale_destinations.add(destination)
+                if stale_destinations:
+                    self.error(
+                        "stale_vmodel_link",
+                        path,
+                        "absent mode found link(s) to the temporary V-model: "
+                        + ", ".join(sorted(stale_destinations)),
+                        line_number,
+                    )
+                    has_stale_link = True
+                    stale_link_lines.add(line_number)
+
+            has_vmodel_context = has_stale_link or any(
+                VMODEL_MENTION_RE.search(line) for line in lines
+            )
+            resolved = path.resolve()
+            is_agent_document = path.name == "AGENTS.md" or _is_within(
+                resolved, agents_root
+            )
+            for line_number, line in enumerate(lines, 1):
+                identifiers = sorted(set(VALID_ID_FIND_RE.findall(line)))
+                if not identifiers:
+                    continue
+                field_match = FIELD_RE.match(line)
+                is_related_metadata = (
+                    field_match is not None
+                    and _normalize_field(field_match.group(1))
+                    == "related specification ids"
+                )
+                message = ", ".join(identifiers)
+                if line_number in stale_link_lines or is_related_metadata:
+                    self.error(
+                        "stale_vmodel_id",
+                        path,
+                        "absent mode found temporary V-model ID(s): "
+                        + message
+                        + "; replace them with current prose or an issue link",
+                        line_number,
+                    )
+                elif is_agent_document or has_vmodel_context:
+                    self.warn(
+                        "possible_stale_vmodel_id",
+                        path,
+                        "absent mode found possible temporary V-model ID(s): "
+                        + message
+                        + "; confirm their provenance",
+                        line_number,
+                    )
+
+    def _check_vmodel_routing(self) -> None:
+        root_index = self.repository / ".agents" / "index.md"
+        vmodel_index = self.repository / ".agents" / "v-model" / "index.md"
+        if not root_index.is_file() or not vmodel_index.is_file():
+            return
+        if vmodel_index.resolve() not in self._linked_local_files(root_index):
+            self.error(
+                "unrouted_vmodel",
+                root_index,
+                "active mode requires .agents/index.md to link directly to "
+                ".agents/v-model/index.md",
+            )
 
     def _check_links(self, files: Iterable[Path]) -> None:
         external_schemes = {"data", "ftp", "http", "https", "mailto", "tel"}
@@ -552,6 +701,59 @@ class RepositoryDocsLinter:
             status = self._profile_status(index) if index.is_file() else None
             self.profiles.append(Profile(profile_root.resolve(), files, status))
 
+    def _check_profile_routing(self) -> None:
+        vmodel_root = (self.repository / ".agents" / "v-model").resolve()
+        vmodel_index = vmodel_root / "index.md"
+        root_targets = (
+            self._linked_local_files(vmodel_index) if vmodel_index.is_file() else set()
+        )
+        for profile in self.profiles:
+            index = profile.root / "index.md"
+            if not index.is_file():
+                continue
+            if profile.root != vmodel_root and index.resolve() not in root_targets:
+                self.error(
+                    "unrouted_vmodel_profile",
+                    vmodel_index,
+                    ".agents/v-model/index.md must link directly to active product "
+                    f"profile {self._relative(index)}",
+                )
+            targets = self._linked_local_files(index)
+            for entry in LAYER_ENTRIES:
+                file_path = profile.root / f"{entry}.md"
+                directory_index = profile.root / entry / "index.md"
+                if file_path.is_file():
+                    target = file_path.resolve()
+                elif directory_index.is_file():
+                    target = directory_index.resolve()
+                else:
+                    continue
+                if target not in targets:
+                    self.error(
+                        "unrouted_profile_layer",
+                        index,
+                        f"profile index must link directly to {self._relative(target)}",
+                    )
+                if not directory_index.is_file():
+                    continue
+                layer_root = directory_index.parent.resolve()
+                layer_targets = self._linked_local_files(directory_index)
+                shards = sorted(
+                    path
+                    for path in profile.files
+                    if path != directory_index.resolve()
+                    and _is_within(path, layer_root)
+                    and path.suffix.lower() == ".md"
+                )
+                for shard in shards:
+                    if shard not in layer_targets:
+                        self.error(
+                            "unrouted_layer_shard",
+                            directory_index,
+                            "layer index must link directly to "
+                            f"{self._relative(shard)}",
+                        )
+
     def _profile_status(self, index: Path) -> str | None:
         pattern = re.compile(
             r"^\s*[-*]\s+\*\*Profile status:\*\*\s*(.+?)\s*$", re.IGNORECASE
@@ -681,6 +883,27 @@ class RepositoryDocsLinter:
                 values.append(line)
         flush()
         return fields, field_lines
+
+    def _check_profile_record_coverage(self) -> None:
+        for profile in self.profiles:
+            prefixes = {
+                record.prefix for record in self.records if record.path in profile.files
+            }
+            for entry, category in LAYER_ENTRIES.items():
+                expected_prefixes = (
+                    set(ACTION_PREFIXES) if category == "ACTION" else {category}
+                )
+                if prefixes & expected_prefixes:
+                    continue
+                file_path = profile.root / f"{entry}.md"
+                directory_path = profile.root / entry
+                target = directory_path if directory_path.is_dir() else file_path
+                label = "verification action" if category == "ACTION" else category
+                self.error(
+                    "empty_profile_layer",
+                    target,
+                    f"active profile requires at least one {label} record",
+                )
 
     def _validate_record_locations(self) -> None:
         for record in self.records:
@@ -1021,28 +1244,31 @@ class RepositoryDocsLinter:
             lines = _visible_lines(self._read(topic))
             metadata = self._context_metadata(lines)
             self._check_context_metadata(topic, metadata)
+            if self.v_model_state == "absent":
+                for line_number, _ in metadata.get("related specification ids", []):
+                    self.warn(
+                        "stale_vmodel_metadata",
+                        topic,
+                        "absent mode found Related specification IDs metadata; "
+                        "replace it with a concise Known gaps entry when needed",
+                        line_number,
+                    )
             text = "\n".join(lines)
             specification_ids = {
                 identifier
                 for identifier in VALID_ID_FIND_RE.findall(text)
                 if identifier.split("-", 1)[0] in SPEC_PREFIXES
             }
-            if not specification_ids and not self._has_justified_missing_specification(
-                metadata
-            ):
-                self.warn(
-                    "context_without_specification",
-                    topic,
-                    "context topic does not link to a specification ID",
-                )
-            for identifier in sorted(specification_ids):
-                record = self.records_by_id.get(identifier)
-                if record is None or record.prefix not in SPEC_PREFIXES:
-                    self.warn(
-                        "context_unknown_specification",
-                        topic,
-                        f"context topic references missing specification {identifier}",
-                    )
+            if self.v_model_state == "active":
+                for identifier in sorted(specification_ids):
+                    record = self.records_by_id.get(identifier)
+                    if record is None or record.prefix not in SPEC_PREFIXES:
+                        self.warn(
+                            "context_unknown_specification",
+                            topic,
+                            "context topic references missing specification "
+                            f"{identifier}",
+                        )
             if topic.resolve() not in reachable_topics:
                 self.warn(
                     "unreachable_context_topic",
@@ -1113,11 +1339,6 @@ class RepositoryDocsLinter:
                 "missing_context_do_not_open_when",
                 "Do not open when",
             ),
-            (
-                "related specification ids",
-                "missing_context_related_specification_ids",
-                "Related specification IDs",
-            ),
             ("review when", "missing_context_review_when", "Review when"),
         ):
             entries = metadata.get(field, [])
@@ -1129,18 +1350,6 @@ class RepositoryDocsLinter:
                     "level-two heading",
                     entries[0][0] if entries else None,
                 )
-
-    @staticmethod
-    def _has_justified_missing_specification(
-        metadata: dict[str, list[tuple[int, str]]],
-    ) -> bool:
-        return any(
-            JUSTIFIED_CONTEXT_WITHOUT_SPEC_RE.fullmatch(
-                value.strip().strip("`*_").strip()
-            )
-            is not None
-            for _, value in metadata.get("related specification ids", [])
-        )
 
     def _reachable_context_topics(self, context_root: Path) -> set[Path]:
         root_index = self.repository / ".agents" / "index.md"
@@ -1381,6 +1590,7 @@ class RepositoryDocsLinter:
         return {
             "repository": str(self.repository),
             "source_roots": [self._relative(path) for path in self.source_roots],
+            "v_model": self.v_model_state,
             "errors": [finding.as_dict() for finding in self.errors],
             "warnings": [finding.as_dict() for finding in self.warnings],
             "summary": {
@@ -1418,6 +1628,7 @@ def _resolve_source_roots(repository: Path, values: Sequence[str] | None) -> lis
 
 def _print_human(result: dict[str, object]) -> None:
     print(f"Repository: {result['repository']}")
+    print(f"V-model: {result['v_model']}")
     for group_name in ("errors", "warnings"):
         findings = result[group_name]
         assert isinstance(findings, list)
@@ -1442,6 +1653,15 @@ def build_parser() -> argparse.ArgumentParser:
         )
     )
     parser.add_argument("repository", help="repository root to inspect")
+    parser.add_argument(
+        "--v-model",
+        choices=sorted(VMODEL_STATES),
+        required=True,
+        help=(
+            "active requires, routes, and validates .agents/v-model; "
+            "absent rejects it and stale Markdown references"
+        ),
+    )
     parser.add_argument(
         "--source-root",
         action="append",
@@ -1468,7 +1688,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     repository = repository.resolve()
     try:
         source_roots = _resolve_source_roots(repository, args.source_root)
-        linter = RepositoryDocsLinter(repository, source_roots)
+        linter = RepositoryDocsLinter(repository, source_roots, args.v_model)
         linter.run()
         result = linter.result(args.fail_on_warn)
     except InputError as exc:

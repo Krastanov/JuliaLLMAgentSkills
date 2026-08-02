@@ -1,131 +1,88 @@
 # Subagent Playbooks
 
-Use this reference only when the environment and applicable instructions permit
-delegation. Scale independence and specialist effort to risk; keep one coordinator
-responsible for intent, reconciliation, and final edits.
+Use this reference only when the environment and repository instructions permit
+delegation. Keep one coordinator responsible for developer intent, shared contracts,
+integration, durable docs, and V-model deletion.
 
-## Contents
+## Isolation
 
-- [Isolation rules](#isolation-rules)
-- [Risk-scaled staffing](#risk-scaled-staffing)
-- [Standard V-layer cohorts](#standard-v-layer-cohorts)
-- [Existing-repository discovery](#existing-repository-discovery)
-- [Consistency review](#consistency-review)
-- [Clean-room forward testing](#clean-room-forward-testing)
+- Give each agent a concrete, bounded lane with explicit inputs, outputs, dependencies,
+  and verification.
+- Provide the skill path, repository path, pinned commit, and a normal user-style task.
+- Use a separate worktree or disposable clone per writing agent. Never share a worktree.
+- For discovery and evaluation, prohibit source changes and pushes.
+- Require exact file, symbol, and test anchors with confidence and conflicts.
+- Keep one concurrency slot for the coordinator.
 
-## Isolation rules
+## Initial implementation swarm
 
-- Give each operator a concrete, bounded, primarily read-only lane.
-- Provide the skill path, repository path, exact pinned commit, and a normal user-style
-  request. Do not reveal expected answers, suspected defects, or another reviewer’s
-  conclusions.
-- Use a separate disposable clone or worktree per writing agent. Never let agents edit
-  the same worktree.
-- For discovery and evaluation, prohibit source-code changes and pushes.
-- Ask for evidence with exact file/symbol/test anchors, confidence, conflicts, and
-  unresolved questions.
-- Keep one slot for the coordinator when concurrency is limited.
+Do not delegate implementation until the developer has confirmed stakeholder outcomes,
+observable behavior, subsystem boundaries, shared interfaces, error semantics, and
+acceptance criteria.
 
-If subagents are unavailable, perform the same lanes sequentially and use a fresh context
-for the independent review when possible.
+Split work along stable `SUB` boundaries rather than arbitrary file counts. For each
+agent, provide:
 
-## Risk-scaled staffing
+1. Owned requirements and component contracts.
+2. Inputs, outputs, state transitions, errors, and prohibited changes.
+3. Dependencies and integration order.
+4. Required tests or other evidence and objective pass criteria.
+5. The persistent context topics and local router that apply.
 
-| Risk/scale | Suggested approach |
-| --- | --- |
-| Tiny, low-risk repository | One operator plus a short independent trace/size review |
-| Ordinary repository | Coordinator plus documentation/source and test/trace operators |
-| Large brownfield or polyglot repository | Coordinator plus code/spec archaeologist, verification mapper, and boundary/router reviewer |
-| High assurance or destructive behavior | Add domain, security/safety, failure-injection, environment, and independent trace specialists as relevant |
+Assign separate integration work when several agents touch one contract. Have the
+coordinator reconcile interface changes before dependents proceed. Update durable
+context as code, commands, and architecture become concrete.
 
-Do not add specialists merely to fill slots. Add them when a distinct evidence domain or
-independence requirement exists.
+After integration, independently inspect trace coverage and try boundary cases. Transfer
+unfinished items to concise context gaps or issues, remove V-model links and IDs, delete
+`.agents/v-model/`, and lint in `absent` mode.
 
-## Standard V-layer cohorts
+## Holistic codebase review
 
-| Layer | Cohort |
-| --- | --- |
-| `STK` / `ACC` | Domain or stakeholder proxy; acceptance-scenario designer; independent trace reviewer |
-| `SYS` / `SYSV` | Requirements analyst; black-box verification designer/executor; relevant performance, security, or compatibility specialist; reviewer |
-| `SUB` / `INTV` | One contract investigator per important boundary; dependency/environment or failure-injection specialist; architecture/trace integrator |
-| `CMP` / `UNITV` | Component/unit-test investigator; static-analysis or code-inspection investigator; orphan/coverage reviewer |
+Use nonoverlapping discovery lanes:
 
-A specialist may cover several roles in a small repository. Preserve independence for the
-final trace review when failure impact warrants it.
+- **Public contract:** docs, examples, manifests, releases, compatibility promises.
+- **Code architecture:** entry points, state and error boundaries, APIs, subsystems.
+- **Verification:** tests, CI, fixtures, environments, skips, evidence durability.
+- **Agent context:** router scope, selective loading, commands, duplication, anchors.
 
-## Existing-repository discovery
+The coordinator merges evidence, then interviews the developer only about intent that
+inspection cannot establish. Build the temporary V-model from confirmed goals.
 
-Give operators nonoverlapping questions:
+Assign independent comparisons for stakeholder outcomes, system behavior, subsystem
+contracts, component invariants, and verification. Every finding must include:
 
-- **Public contract operator:** Inspect public docs, examples, manifests, release metadata,
-  and declared compatibility. Return candidate observable claims and contradictions.
-- **Code archaeologist:** Inspect entry points, data/state/error boundaries, public APIs,
-  and major subsystems. Return observed behavior and architecture decisions separately.
-- **Verification mapper:** Inspect tests, CI, fixtures, supported environments, skips,
-  expected failures, and evidence durability. Return coverage and orphan candidates.
-- **Agent-context reviewer:** Inspect existing routers and context for scope, duplication,
-  open/avoid criteria, anchors, staleness, and likely migration targets. Separate
-  specification and router-local rules, then classify each retained leaf as
-  `Guided learning`, `Task playbook`, `Reference`, or `Explanation`.
+1. Classification: matched, design defect, missing implementation, unintended behavior,
+   verification gap, accepted decision, or unresolved.
+2. Affected goal, code, and evidence anchors.
+3. Impact and confidence.
+4. Smallest safe correction or follow-up.
+5. Whether developer intent is still required.
 
-The coordinator merges evidence into one ledger, asks the developer only unresolved
-intent questions, and classifies claims before anyone writes a baseline.
+For sampled passing actions, compare every phrase in the procedure and criterion with
+the cited evidence. Search for counterexamples to universal claims. Mechanical reverse
+links are not semantic coverage.
 
-## Consistency review
+The coordinator deduplicates findings, applies agreed corrections, improves durable
+docs, and deletes the V-model at review completion.
 
-Assign independent passes for router/link integrity, V-model/traceability, source/test
-drift, and duplication/token cost. Require each finding to include:
+## Documentation review
 
-1. Severity and affected IDs/files.
-2. Exact evidence.
-3. Why it is inconsistent or costly.
-4. Smallest safe correction.
-5. Whether developer intent is required.
+Keep the V-model absent. Assign independent passes for router/link integrity,
+source/test drift, context retrieval quality, and duplication. Start from representative
+repository tasks and follow only the links an agent is told to open. Report missing
+routes, unnecessary hops, unrelated material, stale commands, and mixed context needs.
 
-For every `passing` action sampled, open the cited evidence and compare its exercised
-cases with each phrase in the procedure and pass criterion. Sample universal normative
-claims with at least one boundary or counterexample search. Mechanical reverse links are
-not semantic coverage.
+## Forward-test this skill
 
-For the context-cost pass, start with representative repository tasks and follow only
-the links an agent would be told to open. Report missing routes, unnecessary hops,
-indexes presenting more than seven choices, unrelated documents loaded, and mixed or
-incorrect context needs. Do not recursively preload `.agents/` to perform this review.
+Skill maintainers should use disposable clones pinned to exact commits. Test at least:
 
-Have the coordinator deduplicate findings and apply changes in the reconciliation order
-from `review-and-compaction.md`.
+- A rough new-project prompt that must become a precise, parallelizable design before
+  any code is written.
+- A brownfield codebase whose implementation conflicts with developer-stated goals.
+- An established repository receiving routine docs maintenance with no V-model.
+- Final cleanup of both bounded workflows, including successful `--v-model absent`
+  linting.
 
-## Clean-room forward testing
-
-Skill maintainers should forward-test with disposable clones pinned to exact commits.
-Use three small operators concurrently with one coordinator; for a large case use an
-operator, code/spec archaeologist, and verification mapper, then reuse them as independent
-cross-reviewers.
-
-Core release cases:
-
-- `QuantumSavory.jl`: preserve selective router/context strengths while detecting drift
-  and separating specification from decisions.
-- `PBCCompiler.jl`: migrate a monolithic `AGENTS.md`.
-- `TermInterface.jl`: verify proportional output for a tiny library.
-- `QuantumClifford.jl`: exercise brownfield discovery and subsystem traceability.
-- `WebQuantumSavory`: exercise polyglot roots and cross-stack contracts.
-
-Rotate `QuantumInterface.jl` for externally consumed contracts,
-`julia-buildkite-plugin` for no conventional `src/`, and `AnythingLLMDocs.jl` for
-external-service and safety-aware acceptance planning. Never execute a live destructive
-test merely to evaluate documentation generation.
-
-Require:
-
-- No hard linter errors or avoidable router warnings.
-- Complete bidirectional traceability.
-- No implementation decisions duplicated into specification.
-- No observed behavior promoted to intent without evidence or confirmation.
-- Selective context loading and no source-code changes.
-- An empty unnecessary second-pass diff.
-- Independent approval for correctness, proportionality, interview quality, and context
-  efficiency.
-
-Keep prompts, raw diffs, linter JSON, and scores outside the shipped skill. Retain them
-only until findings are incorporated, then remove clones and temporary artifacts.
+Keep prompts, raw diffs, linter output, and scores outside the shipped skill. Retain them
+only until findings are incorporated, then remove temporary artifacts.

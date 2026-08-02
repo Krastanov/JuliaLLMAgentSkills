@@ -2,6 +2,8 @@
 
 Update status and durable evidence after execution. Set `passing` only when linked
 evidence exercises every clause in the pass criterion. Do not paste transient run logs.
+Transfer unresolved work to durable context or issues, then delete the V-model when the
+active task is complete.
 
 ## ACC-001 — {{ACCEPTANCE_ACTION_TITLE}}
 
